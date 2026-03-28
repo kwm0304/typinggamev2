@@ -1,6 +1,6 @@
 <div class="max-h-[30vh] flex flex-col items-center gap-y-4">
     @if (!isGameActive || isGameStale) {
-    <button class="group flex items-center gap-3 cursor-pointer">
+    <button class="group flex items-center gap-3 cursor-pointer" (click)="toggleShowModal()">
         <fa-icon [icon]="['fas','earth']"
             class="text-[var(--sub-color)] group-hover:text-[var(--text-color)]"></fa-icon>
         <span class="group-hover:text-[var(--text-color)] text-[var(--sub-color)]">{{ language }}</span>
@@ -13,3 +13,25 @@
                 aria-hidden="true"></span>}{{ displayChar($index) }}</span>}
     </div>
 </div>
+@if (showLanguageModal) {
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-[var(--sub-alt-color)] rounded-lg py-8 w-80">
+        <h2 class="text-xl mb-4 text-[var(--text-color)] text-center">Select Language</h2>
+        <ul class="space-y-2">
+            @for (lang of languages; track lang) {
+            <li>
+                <button
+                    class="w-full text-left px-4 py-2  hover:bg-[var(--text-color)] hover:text-[var(--bg-color)]"
+                    (click)="selectLanguage(lang.value)">{{ lang.label }}</button>
+            </li>
+            }
+        </ul>
+        <div class="flex items-center justify-center">
+            <button
+                class="mt-4 px-4 py-2 rounded bg-[var(--sub-color)] text-[var(--text-color)] hover:bg-[var(--caret-color)]"
+                (click)="showLanguageModal = false">Close</button>
+
+        </div>
+    </div>
+</div>
+}

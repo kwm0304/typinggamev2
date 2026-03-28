@@ -185,4 +185,17 @@ describe('Gameboard', () => {
     expect(component.isGameStale).toBeFalse();
     expect(staleSpy).toHaveBeenCalledWith(false);
   });
+
+  it('should update selected language and close language modal', () => {
+    expect(component.language).toBe('english');
+    expect(component.showLanguageModal).toBeFalse();
+
+    component.toggleShowModal();
+    expect(component.showLanguageModal).toBeTrue();
+
+    component.selectLanguage('spanish');
+
+    expect(component.language).toBe('spanish');
+    expect(component.showLanguageModal).toBeFalse();
+  });
 });

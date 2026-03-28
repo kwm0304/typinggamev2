@@ -23,6 +23,8 @@ import { CharState, UserInput } from '../../types/gametypes';
 export class Gameboard implements OnInit, OnDestroy {
   text = input<string>('');
 
+  showLanguageModal: boolean = false;
+
   externalGameEnd = input<boolean>(false);
   gameStart = output<void>();
   gameEnd = output<void>();
@@ -121,7 +123,13 @@ export class Gameboard implements OnInit, OnDestroy {
   public displayChar(index: number): string {
     return this.intakeArray[index] ?? '';
   }
-  private selectLanguage() {}
+  public toggleShowModal() {
+    this.showLanguageModal = true;
+  }
+  public selectLanguage(language: string) {
+    this.language = language;
+    this.showLanguageModal = false;
+  }
   private isValidInput(event: KeyboardEvent): boolean {
     if (event.ctrlKey || event.metaKey || event.altKey) {
       return false;
