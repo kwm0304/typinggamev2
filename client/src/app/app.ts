@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TopMenu } from './components/top-menu/top-menu';
 
@@ -8,6 +8,14 @@ import { TopMenu } from './components/top-menu/top-menu';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit{
   protected readonly title = signal('client');
+  notifications: string[] = [];
+  announcements: string[] = [];
+  ngOnInit(): void {
+    // make call for notifications
+    this.notifications.push('Welcome to the Typing Game!');
+    this.announcements.push('Sidebar works!');
+    this.announcements.push('Type faster!')
+  }
 }

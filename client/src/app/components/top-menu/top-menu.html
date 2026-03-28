@@ -1,30 +1,82 @@
-<div class="flex w-full justify-between items-center pt-6 px-32">
-    <div class="flex">
-    <button class="flex gap-1 hover:cursor-pointer items-center" (click)="navigateToSinglePlayer()">
-        <fa-icon [icon]="['fas', 'keyboard']" class="text-4xl text-[var(--caret-color)]"/>
-        <span class="text-3xl text-[var(--text-color)] tracking-wide leading-none">piggytype</span>
-    </button>
-    <div class="flex items-start gap-4 my-auto pl-6 gap-2">
-        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToSinglePlayer()">
-            <fa-icon [icon]="['fas', 'keyboard']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
-        </button>
-        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToLeaderboard()">
-            <fa-icon [icon]="['fas', 'crown']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
-        </button>
-        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToInfo()">
-            <fa-icon [icon]="['fas', 'info']" class="text-lg text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
-        </button>
-        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToSettings()">
-            <fa-icon [icon]="['fas', 'gear']" class="text-lg text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
-        </button>
+<div class="drawer-end">
+    <input id="notifications-drawer" type="checkbox" class="drawer-toggle" [checked]="showSidebar"
+        (change)="onDrawerToggle($event)" />
+
+    <div class="drawer-content flex w-full justify-between items-center pt-6 px-32">
+        <div class="flex">
+            <button class="flex gap-1 hover:cursor-pointer items-center" (click)="navigateToSinglePlayer()">
+                <fa-icon [icon]="['fas', 'keyboard']" class="text-4xl text-[var(--caret-color)]"></fa-icon>
+                <span class="text-3xl text-[var(--text-color)] tracking-wide leading-none">piggytype</span>
+            </button>
+            <div class="flex items-start gap-4 my-auto pl-6 gap-2">
+                <button class="hover:cursor-pointer flex items-center justify-center my-auto"
+                    (click)="navigateToSinglePlayer()">
+                    <fa-icon [icon]="['fas', 'keyboard']"
+                        class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"></fa-icon>
+                </button>
+                <button class="hover:cursor-pointer flex items-center justify-center my-auto"
+                    (click)="navigateToLeaderboard()">
+                    <fa-icon [icon]="['fas', 'crown']"
+                        class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"></fa-icon>
+                </button>
+                <button class="hover:cursor-pointer flex items-center justify-center my-auto"
+                    (click)="navigateToInfo()">
+                    <fa-icon [icon]="['fas', 'info']"
+                        class="text-lg text-[var(--sub-color)] hover:text-[var(--text-color)]"></fa-icon>
+                </button>
+                <button class="hover:cursor-pointer flex items-center justify-center my-auto"
+                    (click)="navigateToSettings()">
+                    <fa-icon [icon]="['fas', 'gear']"
+                        class="text-lg text-[var(--sub-color)] hover:text-[var(--text-color)]"></fa-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <button class="hover:cursor-pointer flex items-center justify-center my-auto" (click)="openSidebar()">
+                <fa-icon [icon]="['fas', 'bell']"
+                    class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"></fa-icon>
+            </button>
+            <button class="hover:cursor-pointer flex items-center justify-center my-auto" (click)="navigateToAuth()">
+                <fa-icon [icon]="['fas', 'user']"
+                    class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"></fa-icon>
+            </button>
+        </div>
     </div>
-    </div>
-    <div class="flex gap-4">
-        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="toggleShowNotifications()">
-            <fa-icon [icon]="['fas', 'bell']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
-        </button>
-        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToAuth()">
-            <fa-icon [icon]="['fas', 'user']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
-        </button>
+
+    <div class="drawer-side">
+        <label for="notifications-drawer" aria-label="close sidebar" class="drawer-overlay"
+            (click)="closeSidebar()"></label>
+        <div class="w-80 min-h-full bg-base-200 opacity-100 p-4 pt-8">
+            <div class="w-full">
+                <div class="flex gap-1 items-center justify-center">
+                    <h2 class="text-2xl text-center mt-4 text-[var(--sub-color)]">Notifications</h2>
+                    <fa-icon [icon]="['fas','paper-plane']" class="pt-4 text-2xl text-[var(--sub-color)]"></fa-icon>
+
+                </div>
+                <ul class="list-disc p-4">
+                    @for (notification of notifications(); track $index) {
+                    <li class="p-2 bg-[var(--sub-alt-color)] rounded mb-2 text-[var(--text-color)]">
+                        {{ notification }}
+                    </li>
+                    }
+                </ul>
+            </div>
+            <div class="divider text-[var(--sub-color)]"></div>
+            <div class="w-full">
+                <div class="flex gap-1 items-center justify-center">
+                    <h2 class="text-2xl text-center mt-4 text-[var(--sub-color)]">Announcements</h2>
+                    <fa-icon [icon]="['fas','comment']" class="pt-4 text-2xl text-[var(--sub-color)]"></fa-icon>
+
+                </div>
+                <ul class="list-disc p-4">
+                    @for (announcement of announcements(); track $index) {
+                    <li class="p-2 bg-[var(--sub-alt-color)] rounded mb-2 text-[var(--text-color)]">
+                        {{ announcement }}
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
