@@ -1,0 +1,30 @@
+<div class="flex w-full justify-between items-center pt-6 px-32">
+    <div class="flex">
+    <button class="flex gap-1 hover:cursor-pointer items-center" (click)="navigateToSinglePlayer()">
+        <fa-icon [icon]="['fas', 'keyboard']" class="text-4xl text-[var(--caret-color)]"/>
+        <span class="text-3xl text-[var(--text-color)] tracking-wide leading-none">piggytype</span>
+    </button>
+    <div class="flex items-start gap-4 my-auto pl-6 gap-2">
+        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToSinglePlayer()">
+            <fa-icon [icon]="['fas', 'keyboard']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
+        </button>
+        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToLeaderboard()">
+            <fa-icon [icon]="['fas', 'crown']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
+        </button>
+        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToInfo()">
+            <fa-icon [icon]="['fas', 'info']" class="text-lg text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
+        </button>
+        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToSettings()">
+            <fa-icon [icon]="['fas', 'gear']" class="text-lg text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
+        </button>
+    </div>
+    </div>
+    <div class="flex gap-4">
+        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="toggleShowNotifications()">
+            <fa-icon [icon]="['fas', 'bell']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
+        </button>
+        <button class="hover:cursor-pointer  flex items-center justify-center my-auto" (click)="navigateToAuth()">
+            <fa-icon [icon]="['fas', 'user']" class="text-xl text-[var(--sub-color)] hover:text-[var(--text-color)]"/>
+        </button>
+    </div>
+</div>

@@ -1,1 +1,9 @@
-<p>gameboard works!</p>
+<div class="max-h-[30vh] flex flex-col items-center gap-y-4">
+<button class="group flex items-center gap-3 cursor-pointer">
+  <fa-icon [icon]="['fas','earth']" class="text-[var(--sub-color)] group-hover:text-[var(--text-color)]"></fa-icon>
+  <span class="group-hover:text-[var(--text-color)] text-[var(--sub-color)]">{{ language }}</span>
+</button>
+<div class="pt-1 text-3xl max-w-[75vw] text-[var(--sub-color)] leading-[1.5]">
+  @for (char of charArray; track char.index) {<span class="char-cell" [class.char-correct]="char.correct" [class.char-incorrect]="char.incorrect">@if (char.active && !isGameOver) {<span class="typing-caret" aria-hidden="true"></span>}{{ displayChar($index) }}</span>}
+</div>
+</div>

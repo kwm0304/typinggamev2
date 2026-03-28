@@ -1,0 +1,31 @@
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "monkeyType";
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
+
+  /* MonkeyType-inspired palette from your previous config */
+  --color-base-100: #323437; /* main background */
+  --color-base-200: #2c2e31; /* alt background */
+  --color-base-300: #646669; /* subtle borders / muted */
+  --color-base-content: #d1d0c5; /* main text */
+
+  --color-primary: #e2b714; /* accent / caret */
+  --color-primary-content: #323437;
+
+  --color-error: #ca4754;
+  --color-error-content: #d1d0c5;
+
+  /* Your original custom vars for direct use */
+  --bgColor: #323437;
+  --mainColor: #e2b714;
+  --caretColor: #e2b714;
+  --subColor: #646669;
+  --subAltColor: #2c2e31;
+  --textColor: #d1d0c5;
+  --errorColor: #ca4754;
+  --errorExtraColor: #7e2a33;
+  --colorfulErrorColor: #ca4754;
+  --colorfulErrorExtraColor: #7e2a33;
+}

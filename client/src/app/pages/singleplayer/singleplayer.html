@@ -1,1 +1,20 @@
-<p>singleplayer works!</p>
+<div class="w-full h-full">
+    <div class="pt-8 flex items-center justify-center">
+        @if (!isGameActive || isGameStale) {
+            <app-navbar (gameSettingsChange)="onGameSettingsChange($event)"></app-navbar>
+        }
+    </div>
+    @if (gameSettings.middleKey  === 'time') {
+        <app-gameclock></app-gameclock>
+    }
+    <div class="pt-24">
+        <app-gameboard
+            [text]="textWall"
+            [externalGameEnd]="externalGameEnd"
+            (isGameActiveChange)="onIsGameActiveChange($event)"
+            (isGameStaleChange)="onIsGameStaleChange($event)"
+            (gameStart)="onGameStart()"
+            (gameEnd)="onGameEnd()"
+        ></app-gameboard>
+    </div>
+</div> 

@@ -1,6 +1,82 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles entry: Tailwind + daisyUI (Tailwind v4 style) */
 
 @import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, night;
+}
+@import "tailwindcss";
+
+/* ...existing code... */
+
+@theme {
+  /* core */
+  --color-bg-color: #323437;
+  --color-main-color: #e2b714;
+  --color-text-color: #d1d0c5;
+  --color-sub-color: #646669;
+  --color-sub-alt-color: #2c2e31;
+
+  /* status */
+  --color-caret-color: #e2b714;
+  --color-error-color: #ca4754;
+  --color-error-extra-color: #7e2a33;
+}
+/* ...existing code... */
+
+:root {
+  --bg-color: #323437;
+  --main-color: #e2b714;
+  --text-color: #d1d0c5;
+  --sub-color: #646669;
+  --sub-alt-color: #2c2e31;
+
+  --caret-color: #e2b714;
+  --error-color: #ca4754;
+  --error-extra-color: #7e2a33;
+}
+
+/* optional base usage */
+html,
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* ...existing code... */
+
+/* ...existing code... */
+@plugin "daisyui/theme" {
+  name: "monkeyType";
+  default: true;
+  prefersdark: false;
+  color-scheme: dark;
+
+  /* MonkeyType-inspired palette from your previous config */
+  --color-base-100: #323437; /* main background */
+  --color-base-200: #2c2e31; /* alt background */
+  --color-base-300: #646669; /* subtle borders / muted */
+  --color-base-content: #d1d0c5; /* main text */
+
+  --color-primary: #e2b714; /* accent / caret */
+  --color-primary-content: #323437;
+
+  --color-error: #ca4754;
+  --color-error-content: #d1d0c5;
+
+  /* Your original custom vars for direct use */
+  --bgColor: #323437;
+  --mainColor: #e2b714;
+  --caretColor: #e2b714;
+  --subColor: #646669;
+  --subAltColor: #2c2e31;
+  --textColor: #d1d0c5;
+  --errorColor: #ca4754;
+  --errorExtraColor: #7e2a33;
+  --colorfulErrorColor: #ca4754;
+  --colorfulErrorExtraColor: #7e2a33;
+}
+
 body {
   @apply font-mono;
 }

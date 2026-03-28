@@ -14,8 +14,10 @@
       "prefix": "app",
       "architect": {
         "build": {
+          
           "builder": "@angular/build:application",
           "options": {
+            
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -27,6 +29,7 @@
             "styles": [
               "src/styles.css"
             ]
+            
           },
           "configurations": {
             "production": {
@@ -65,7 +68,10 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "karma"
+          }
         }
       }
     }

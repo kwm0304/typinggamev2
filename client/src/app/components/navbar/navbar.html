@@ -1,1 +1,43 @@
-<p>navbar works!</p>
+<div
+  class="bg-[var(--sub-alt-color)] mx-auto rounded-md px-8 py-2 text-[var(--sub-color)] inline-flex items-center justify-center text-[var(--sub-color)] text-sm">
+  <div class="flex gap-2">
+    @for (item of leftNavItems; track item.label) {
+    <button class="flex items-center gap-1 hover:cursor-pointer hover:text-[var(--caret-color)]"
+      [ngClass]="{ 'text-caret-color': item.isSelected}" (click)="selectLeftItem(item.index)">
+      @if (item.icon) {
+      <fa-icon [icon]="item.icon"></fa-icon>
+      }
+      {{ item.label }}
+    </button>
+    }
+  </div>
+
+  <div class="divider divider-horizontal text-[var(--sub-color)] "></div>
+
+  <div class="flex gap-2">
+    @for (item of middleNavItems; track item.index) {
+    <button class="flex items-center gap-1 cursor-pointer  hover:cursor-pointer hover:text-[var(--caret-color)]"
+      (click)="selectMiddleItem($any(item.label))"
+      [ngClass]="{ 'text-caret-color': selectedMiddle === $any(item.label) }">
+      @if (item.icon) {
+      <fa-icon [icon]="item.icon"></fa-icon>
+      }
+      {{ item.label }}
+    </button>
+    }
+  </div>
+
+  <div class="divider divider-horizontal text-[var(--sub-color)] "></div>
+
+  <div class="flex gap-2">
+    @for (item of rightNavItems; track item.index) {
+    <button class="flex items-center gap-1 cursor-pointer hover:cursor-pointer hover:text-[var(--caret-color)]"
+      (click)="item.onClick()" [ngClass]="{ 'text-caret-color': item.isSelected }">
+      @if (item.icon) {
+      <fa-icon [icon]="item.icon"></fa-icon>
+      }
+      {{ item.label }}
+    </button>
+    }
+  </div>
+</div>
