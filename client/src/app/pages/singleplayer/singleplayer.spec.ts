@@ -65,16 +65,18 @@ describe('Singleplayer', () => {
     expect(component.externalGameEnd).toBeTrue();
     expect(component.gameSettings).toEqual(nextSettings);
 
-    await Promise.resolve();
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(component.externalGameEnd).toBeFalse();
   });
 
-  it('onIsGameStaleChange should mirror stale state', () => {
+  it('onIsGameStaleChange should mirror stale state', async () => {
     component.onIsGameStaleChange(true);
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(component.isGameStale).toBeTrue();
 
     component.onIsGameStaleChange(false);
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(component.isGameStale).toBeFalse();
   });
 });

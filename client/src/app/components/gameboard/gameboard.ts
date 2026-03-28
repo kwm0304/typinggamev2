@@ -11,7 +11,7 @@ import {
 import { FaIconLibrary, FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faEarth } from '@fortawesome/free-solid-svg-icons';
 
-import { CharState, UserInput } from '../../types/gametypes';
+import { CharState, TestCharacters, UserInput } from '../../types/gametypes';
 
 @Component({
   selector: 'app-gameboard',
@@ -28,6 +28,7 @@ export class Gameboard implements OnInit, OnDestroy {
   externalGameEnd = input<boolean>(false);
   gameStart = output<void>();
   gameEnd = output<void>();
+  gameStats = output<TestCharacters>();
   isGameActiveChange = output<boolean>();
   isGameActive = false;
   isGameOver = false;
@@ -61,11 +62,11 @@ export class Gameboard implements OnInit, OnDestroy {
         return;
       }
       if (this.isGameActive && !this.isGameOver) {
-        this.isGameActive = false;
-        this.isGameActiveChange.emit(this.isGameActive);
-        this.clearStaleTimer();
-        this.setGameStale(false);
-        this.cdr.markForCheck();
+        console.log('[Gameboard] externalGameEnd received while active; ending game locally', {
+          isGameActive: this.isGameActive,
+          isGameOver: this.isGameOver,
+        });
+        this.handleGameOver();
       }
     });
   }
@@ -98,6 +99,7 @@ export class Gameboard implements OnInit, OnDestroy {
 
     const expectedChar = this.intakeArray[index];
     const isCorrect = input === expectedChar;
+    
     this.inputArray.push({ char: input, isCorrect, index });
     currentCharState.correct = isCorrect;
     currentCharState.incorrect = !isCorrect;
@@ -172,6 +174,10 @@ export class Gameboard implements OnInit, OnDestroy {
     }
   };
   private setStartGameState() {
+    console.log('[Gameboard] game start emitted', {
+      currentIndex: this.currentIndex,
+      textLength: this.intakeArray.length,
+    });
     this.isGameActive = true;
     this.isGameActiveChange.emit(this.isGameActive);
     this.setGameStale(false);
@@ -194,6 +200,13 @@ export class Gameboard implements OnInit, OnDestroy {
   }
 
   private handleGameOver() {
+    const finalStats = this.getFinalStats();
+    this.gameStats.emit(finalStats);
+    console.log('final stats from gameboard: ', finalStats);
+    console.log('[Gameboard] game over emitted', {
+      currentIndex: this.currentIndex,
+      inputCount: this.inputArray.length,
+    });
     this.isGameActive = false;
     this.isGameActiveChange.emit(this.isGameActive);
     this.clearStaleTimer();
@@ -201,6 +214,23 @@ export class Gameboard implements OnInit, OnDestroy {
     this.isGameOver = true;
     this.gameEnd.emit();
     this.cdr.markForCheck();
+  }
+  private getFinalStats(): TestCharacters {
+    let extraCount = 0;
+    for (let i = 0; i < this.intakeArray.length; i++) {
+      if (this.intakeArray[i] === ' ' && this.inputArray[i]?.char !== ' ') {
+        extraCount++;
+      }
+    }
+    const incorrectCount = this.inputArray.filter((input) => !input.isCorrect).length;
+    const missedCount = Math.max(incorrectCount - extraCount, 0);
+
+    return {
+      correct: this.inputArray.filter((input) => input.isCorrect).length,
+      incorrect: incorrectCount,
+      extra: extraCount,
+      missed: missedCount,
+    };
   }
 
   /*if game is active and gameOver is false  and there is no input for 3 seconds, 
@@ -228,6 +258,11 @@ export class Gameboard implements OnInit, OnDestroy {
       return;
     }
     this.isGameStale = isStale;
+    console.log('[Gameboard] stale state changed', {
+      isGameStale: this.isGameStale,
+      isGameActive: this.isGameActive,
+      isGameOver: this.isGameOver,
+    });
     this.isGameStaleChange.emit(this.isGameStale);
     this.cdr.markForCheck();
   }

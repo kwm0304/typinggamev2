@@ -12,11 +12,13 @@
          [canStartTimer]="canStartTime" 
          [isGameStale]="isGameStale"
          (pausedGameTimeChange)="onPausedGameTimeChange($event)"
+         (timeOut)="onTimeOut()"
         />
     }
         <app-gameboard
             [text]="textWall"
             [externalGameEnd]="externalGameEnd"
+            (gameStats)="onGameStats($event)"
             (isGameActiveChange)="onIsGameActiveChange($event)"
             (isGameStaleChange)="onIsGameStaleChange($event)"
             (gameStart)="onGameStart()"

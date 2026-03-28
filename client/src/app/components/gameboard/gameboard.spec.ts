@@ -186,6 +186,42 @@ describe('Gameboard', () => {
     expect(staleSpy).toHaveBeenCalledWith(false);
   });
 
+  it('getFinalStats should calculate correct, incorrect, extra, and missed', () => {
+    initializeGameboard('a b');
+
+    component.inputArray = [
+      { char: 'a', isCorrect: true, index: 0 },
+      { char: 'x', isCorrect: false, index: 1 },
+      { char: 'c', isCorrect: false, index: 2 },
+    ];
+
+    const stats = (component as any).getFinalStats();
+
+    expect(stats).toEqual({
+      correct: 1,
+      incorrect: 2,
+      extra: 1,
+      missed: 1,
+    });
+  });
+
+  it('getFinalStats should handle missing input indices safely', () => {
+    initializeGameboard('a b c');
+
+    component.inputArray = [
+      { char: 'a', isCorrect: true, index: 0 },
+    ];
+
+    const stats = (component as any).getFinalStats();
+
+    expect(stats).toEqual({
+      correct: 1,
+      incorrect: 0,
+      extra: 2,
+      missed: 0,
+    });
+  });
+
   it('should update selected language and close language modal', () => {
     expect(component.language).toBe('english');
     expect(component.showLanguageModal).toBeFalse();

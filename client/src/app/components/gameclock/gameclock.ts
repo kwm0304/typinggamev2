@@ -11,6 +11,7 @@ export class Gameclock implements OnDestroy {
   canStartTimer = input<boolean>(false);
   isGameStale = input<boolean>(false);
   pausedGameTimeChange = output<number>();
+  timeOut = output<void>();
   remainingSeconds = signal(0);
   timerRunning = signal(false);
   isTimeOut = signal(false);
@@ -47,6 +48,8 @@ export class Gameclock implements OnDestroy {
       } else {
         this.isTimeOut.set(true);
         this.timerRunning.set(false);
+        console.log('[Gameclock] timeout reached; emitting timeOut');
+        this.timeOut.emit();
         if (this.intervalId) clearInterval(this.intervalId);
       }
       this.cdr.markForCheck();

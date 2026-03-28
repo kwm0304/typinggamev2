@@ -14,25 +14,26 @@ export class TopMenu {
   notifications = input<string[]>([]);
   announcements = input<string[]>([]);
   showSidebar: boolean = false;
+  private _router: Router;
   constructor(private faIconLibrary: FaIconLibrary, private router: Router) {
     this.faIconLibrary.addIcons(faKeyboard, faCrown, faInfo, faGear, faBell, faUser, faPaperPlane,faComment);
-    this.router = router;
+    this._router = router;
   }
 
   navigateToAuth() {
-    this.router.navigate(['/auth']);
+    this._router.navigate(['/auth']);
   }
   navigateToSettings() {
-    this.router.navigate(['/settings']);
+    this._router.navigate(['/settings']);
   }
   navigateToLeaderboard() {
-    this.router.navigate(['/leaderboard']);
+    this._router.navigate(['/leaderboard']);
   }
   navigateToInfo() {
-    this.router.navigate(['/info']);
+    this._router.navigate(['/info']);
   }
   navigateToSinglePlayer() {
-    this.router.navigate(['/']);
+    this._router.navigate(['/']);
   }
   toggleShowNotifications() {
     this.showSidebar = !this.showSidebar;

@@ -26,3 +26,23 @@ export interface NavItem {
   index: number;
   onClick: () => void;
 };
+
+export interface TestType {
+  test: MiddleNavKey;
+  modifier: string;
+}
+
+export interface TestCharacters {
+  correct: number;
+  incorrect: number;
+  extra: number;
+  missed: number;
+}
+export interface TestResults {
+  rawWPM: number;
+  timeTaken: number;
+  TestType: TestType;
+  TestCharacters: TestCharacters;
+  hasPunctuation?: boolean;
+  hasNumbers?: boolean;
+}
