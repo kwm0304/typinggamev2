@@ -11,17 +11,8 @@ import {
 import { FaIconLibrary, FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faEarth } from '@fortawesome/free-solid-svg-icons';
 
-interface UserInput {
-  char: string;
-  isCorrect: boolean;
-  index: number;
-}
-interface CharState {
-  correct: boolean;
-  incorrect: boolean;
-  active: boolean;
-  index: number;
-}
+import { CharState, UserInput } from '../../types/gametypes';
+
 @Component({
   selector: 'app-gameboard',
   imports: [FaIconComponent],
@@ -150,14 +141,18 @@ export class Gameboard implements OnInit, OnDestroy {
       this.setGameStale(false);
       this.startStaleTimer();
     }
-    
-    let isValid = this.isValidInput(event);
-    if (!isValid) {
-      return;
-    }
+
     if (event.key === 'Backspace') {
+      if (this.isGameOver) {
+        return;
+      }
       event.preventDefault();
       this.handleBackspace();
+      return;
+    }
+
+    let isValid = this.isValidInput(event);
+    if (!isValid) {
       return;
     }
     event.preventDefault();

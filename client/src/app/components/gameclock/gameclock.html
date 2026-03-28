@@ -1,1 +1,3 @@
-<p>gameclock works!</p>
+@if (timerRunning()) {
+  <p class="text-[var(--caret-color)] pl-48 text-4xl">{{ remainingSeconds() }}</p>
+}

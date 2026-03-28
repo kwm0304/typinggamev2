@@ -13,20 +13,8 @@ import {
   faFile,
 } from '@fortawesome/free-solid-svg-icons';
 
-type MiddleNavKey = 'time' | 'words' | 'quote' | 'custom' | 'zen';
-interface NavItem {
-  label: string;
-  icon?: any;
-  isSelected?: boolean;
-  index: number;
-  onClick: () => void;
-}
-export interface GameSettings {
-  hasPunctuation: boolean;
-  hasNumbers: boolean;
-  middleKey: MiddleNavKey;
-  rightModifier: string;
-}
+import { GameSettings, MiddleNavKey, NavItem } from '../../types/gametypes'
+
 
 @Component({
   selector: 'app-navbar',
@@ -101,8 +89,8 @@ export class Navbar implements OnInit {
   ];
   //right nav items determined by middle selection, default is timeItems
   timeItems = [
-    { label: '15', index: 0, isSelected: true, onClick: () => this.selectItem(0) },
-    { label: '30', index: 1, isSelected: false, onClick: () => this.selectItem(1) },
+    { label: '15', index: 0, isSelected: false, onClick: () => this.selectItem(0) },
+    { label: '30', index: 1, isSelected: true, onClick: () => this.selectItem(1) },
     { label: '60', index: 2, isSelected: false, onClick: () => this.selectItem(2) },
     { label: '120', index: 3, isSelected: false, onClick: () => this.selectItem(3) },
   ];

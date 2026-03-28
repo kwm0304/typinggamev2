@@ -4,10 +4,16 @@
             <app-navbar (gameSettingsChange)="onGameSettingsChange($event)"></app-navbar>
         }
     </div>
-    @if (gameSettings.middleKey  === 'time') {
-        <app-gameclock></app-gameclock>
-    }
+    
     <div class="pt-24">
+        @if (gameSettings.middleKey  === 'time' && isGameActive && !isGameStale) {
+        <app-gameclock 
+        [startTime]="pausedGameTime ?? gameTime"
+         [canStartTimer]="canStartTime" 
+         [isGameStale]="isGameStale"
+         (pausedGameTimeChange)="onPausedGameTimeChange($event)"
+        />
+    }
         <app-gameboard
             [text]="textWall"
             [externalGameEnd]="externalGameEnd"
@@ -15,6 +21,6 @@
             (isGameStaleChange)="onIsGameStaleChange($event)"
             (gameStart)="onGameStart()"
             (gameEnd)="onGameEnd()"
-        ></app-gameboard>
+        />
     </div>
 </div> 

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { Singleplayer } from './singleplayer';
-import { GameSettings } from '../../components/navbar/navbar';
+import { GameSettings } from '../../types/gametypes';
 
 describe('Singleplayer', () => {
   let component: Singleplayer;
