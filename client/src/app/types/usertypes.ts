@@ -10,3 +10,16 @@ export interface LoginDto {
     password: string;
     rememberMe: boolean;
 }
+
+export interface AuthResponse {
+    token: string;
+    username: string;
+    email: string;
+}
+
+export interface AlertDTO {
+    message: string;
+    type: AlertType;
+}
+
+export type AlertType = 'success' | 'error' | 'warning';

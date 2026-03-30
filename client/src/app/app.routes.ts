@@ -7,6 +7,7 @@ import { Auth } from './pages/auth/auth';
 
 export const routes: Routes = [
     {path: '', component: Singleplayer },
+    { path: 'multiplayer', component: Multiplayer },
     {path: 'multiplayer', component: Multiplayer},
     { path: 'leaderboard', component: Leaderboard },
     { path: 'results', component: Result},

@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faKeyboard, faCrown, faInfo, faGear, faBell, faUser, faComment, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faKeyboard, faCrown, faInfo, faGear, faBell, faUser, faComment, faPaperPlane, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-top-menu',
@@ -16,7 +16,7 @@ export class TopMenu {
   showSidebar: boolean = false;
   private _router: Router;
   constructor(private faIconLibrary: FaIconLibrary, private router: Router) {
-    this.faIconLibrary.addIcons(faKeyboard, faCrown, faInfo, faGear, faBell, faUser, faPaperPlane,faComment);
+    this.faIconLibrary.addIcons(faKeyboard, faCrown, faInfo, faGear, faBell, faUser,faUsers, faPaperPlane,faComment);
     this._router = router;
   }
 
@@ -34,6 +34,9 @@ export class TopMenu {
   }
   navigateToSinglePlayer() {
     this._router.navigate(['/']);
+  }
+  navigateToMultiplayer() {
+    this._router.navigate(['/multiplayer']);
   }
   toggleShowNotifications() {
     this.showSidebar = !this.showSidebar;

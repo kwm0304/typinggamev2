@@ -28,5 +28,7 @@ export class Signupform {
     this.signupSubmit.emit(this.userInfo);
 
   }
-  submitSignup() {}
+  submitSignup() {
+    this.signupSubmit.emit(this.userInfo);
+  }
 }
