@@ -8,6 +8,7 @@
         public required decimal Accuracy { get; set; }
         public required decimal TimeTaken { get; set; }
         public required TestCharacters TestCharacters { get; set; } 
-        public required TestType TestType { get; set; }
+        public required string TestType { get; set; }
+        public required string TestModifier { get; set; }
     }
 }

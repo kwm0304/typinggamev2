@@ -7,6 +7,7 @@
         public bool IsTimed { get; set; }
         public bool IsWords { get; set; }
         public bool IsQuote { get; set; }
+        public bool IsCustom { get; set; }
         public string? QuoteSize { get; set; }
         public int? GameTextLength { get; set; }
         public int? GameTimeLengthSeconds { get; set; }

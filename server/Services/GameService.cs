@@ -16,7 +16,23 @@ namespace server.Services
             int textLength = GetTextLengthFromConfiguration(configDto);
             string initialText = await _http.GetExternalText(textLength, cancellationToken);
             string formattedText = ConfigureTextForGame(initialText, configDto);
+            if (configDto.IsWords == true)
+            {
+                formattedText = GetExactLength(formattedText, Convert.ToInt32(configDto.GameTextLength));
+            }
             return new GameTextDTO { Text = formattedText };
+        }
+        public string GetExactLength(string text, int wordAmount)
+        {
+            if (string.IsNullOrWhiteSpace(text) || wordAmount <= 0)
+                return string.Empty;
+
+            var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            Console.WriteLine("word amount: ", wordAmount);
+            if (words.Length <= wordAmount)
+                return string.Join(' ', words);
+
+            return string.Join(' ', words.Take(wordAmount));
         }
         public string ConfigureTextForGame(string gameText, GameConfigurationDTO config)
         {
@@ -53,8 +69,14 @@ namespace server.Services
             if (dto.IsWords)
             {
                 if (dto.GameTextLength is null)
+                {
                     return 200;
-                return Convert.ToInt32(dto.GameTextLength);
+                } else
+                {
+                    return Convert.ToInt32(dto.GameTextLength);
+                }
+                    
+                
             }
             return 200;
         }

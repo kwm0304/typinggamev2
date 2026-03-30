@@ -9,5 +9,29 @@ namespace server.Data
         {
         }
         public DbSet<TestResult> TestResults { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<TestResult>(entity =>
+            {
+                entity.HasKey(tr => tr.Id);
+
+                // Configure owned value object for TestCharacters
+                entity.OwnsOne(tr => tr.TestCharacters, owned =>
+                {
+                    owned.Property(tc => tc.Correct).HasColumnName("CorrectCharacters");
+                    owned.Property(tc => tc.Incorrect).HasColumnName("IncorrectCharacters");
+                    owned.Property(tc => tc.Extra).HasColumnName("ExtraCharacters");
+                    owned.Property(tc => tc.Missed).HasColumnName("MissedCharacters");
+                });
+
+                // Optional: map enum as string instead of int
+
+                entity.Property(tr => tr.TestType)
+              .HasMaxLength(50)
+              .HasColumnType("nvarchar(50)");
+            });
+        }
     }
 }

@@ -16,8 +16,8 @@ namespace server.Controllers
         /// <param name="ct">Cancellation token</param>
         /// <returns>Game text from external API</returns>
     
-        [HttpGet]
-        public async Task<ActionResult<GameTextDTO>> CreateGame([FromBody] GameConfigurationDTO configDto, CancellationToken ct)
+        [HttpPost]
+        public async Task<ActionResult<GameTextDTO>> CreateGame([FromBody] GameConfigurationDTO configDto)
         {
             try
             {
