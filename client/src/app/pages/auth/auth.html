@@ -1,1 +1,10 @@
-<p>auth works!</p>
+<div class="h-full py-auto w-full flex flex-col items-center justify-center">
+  <div class="w-full grid grid-cols-2 h-full justify-center px-24 items-start">
+    <div class="w-full h-full flex items-start justify-center">
+      <app-signupform (signupSubmit)="onSignupReceived($event)"></app-signupform>
+    </div>
+    <div class="w-full h-full flex items-start justify-center">
+      <app-loginform (loginSubmit)="onLoginReceived($event)"></app-loginform>
+    </div>
+  </div>
+</div>

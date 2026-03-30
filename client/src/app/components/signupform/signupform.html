@@ -1,1 +1,15 @@
-<p>signupform works!</p>
+<div class="flex gap-2 pb-2 text-[var(--sub-color)]">
+    <fa-icon [icon]="['fas', 'user-plus']"></fa-icon>
+    <h2>register</h2>
+</div>
+<form class="flex flex-col gap-y-1" (ngSubmit)="submitSignup()">
+    <input type="text" placeholder="Username" class="input rounded-md input- w-72 text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none" [(ngModel)]="userInfo.username" name="username" required>
+    <input type="email" placeholder="Email" class="input rounded-md input- w-72 max-w-md text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none" [(ngModel)]="userInfo.email" name="email" required>
+       <input type="text" placeholder="First Name" class="input rounded-md input- w-72 max-w-md text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none" [(ngModel)]="userInfo.firstName" name="firstName" required>
+    <input type="text" placeholder="Last Name" class="input rounded-md input- w-72 max-w-md text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none" [(ngModel)]="userInfo.lastName" name="lastName" required>
+
+    <input type="password" placeholder="Password" class="input rounded-md input- w-72 max-w-md text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none" [(ngModel)]="userInfo.password" name="password" required>
+    <button type="submit" class="rounded-md btn text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none hover:bg-[var(--text-color)] hover:text-[var(--sub-alt-color)] flex gap-1 w-72">
+        <fa-icon [icon]="['fas', 'user-plus']"></fa-icon>
+        <span>sign up</span></button>
+</form>

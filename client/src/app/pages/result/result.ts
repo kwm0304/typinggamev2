@@ -1,14 +1,19 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, inject, input, OnInit } from '@angular/core';
+import { ResultTable } from '../../components/result-table/result-table';
+import { CommonModule } from '@angular/common';
 import { TestResults } from '../../types/gametypes';
+import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-singleplayerresults',
-  templateUrl: './singleplayerresults.html',
-  styleUrl: './singleplayerresults.css',
+  selector: 'app-result',
+  imports: [ResultTable, CommonModule],
+  templateUrl: './result.html',
+  styleUrl: './result.css',
+  standalone: true,
 })
-export class Singleplayerresults implements OnInit {
-  private location = inject(Location);
+export class Result implements OnInit {
+  isSinglePlayer = input<boolean>();
+private location = inject(Location);
   results: TestResults | null = null;
   accuracy: string = '';
   wpm: number = 0;
@@ -21,7 +26,10 @@ export class Singleplayerresults implements OnInit {
   extraChars: number = 0;
   missedChars: number = 0;
   timeTaken: number = 0;
-  ngOnInit(): void {
+  ngOnInit() {
+    // Determine if the result is for single player or multiplayer based on route or data
+    // For example, you could check the route parameters or a service that holds the game state
+    // this.isSinglePlayer = someService.isSinglePlayer();
     const state = this.location.getState() as { gameStats?: TestResults };
     this.results = state?.gameStats ?? null;
     if (this.results) {

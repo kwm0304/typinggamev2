@@ -1,0 +1,49 @@
+<div class="h-full w-full flex flex-col items-center justify-center">
+    <h1 class="text-center text-[var(--caret-color)] text-5xl py-24">Results</h1>
+    @if (isSinglePlayer()) {
+        <app-result-table 
+            [hasPunctuation]="hasPunctuation" 
+            [hasNumbers]="hasNumbers"
+            [wpm]="wpm"
+            [accuracy]="accuracy"
+            [correctChars]="correctChars"
+            [incorrectChars]="incorrectChars"
+            [extraChars]="extraChars"
+            [missedChars]="missedChars"
+            [timeTaken]="timeTaken.toString()"
+            [testType]="testType"
+            [testModifier]="testModifier"
+        />
+    } @else {
+        <div class="w-full h-full flex flex-col items-center justify-center">
+            <h2 class="text-[var(--sub-color)] text-3xl mb-12">Player 1</h2>
+            <app-result-table 
+                [hasPunctuation]="hasPunctuation" 
+                [hasNumbers]="hasNumbers"
+                [wpm]="wpm"
+                [accuracy]="accuracy"
+                [correctChars]="correctChars"
+                [incorrectChars]="incorrectChars"
+                [extraChars]="extraChars"
+                [missedChars]="missedChars"
+                [timeTaken]="timeTaken.toString()"
+                [testType]="testType"
+                [testModifier]="testModifier"
+            />
+            <h2 class="text-[var(--sub-color)] text-3xl my-12">Player 2</h2>
+            <app-result-table 
+                [hasPunctuation]="hasPunctuation" 
+                [hasNumbers]="hasNumbers"
+                [wpm]="wpm"
+                [accuracy]="accuracy"
+                [correctChars]="correctChars"
+                [incorrectChars]="incorrectChars"
+                [extraChars]="extraChars"
+                [missedChars]="missedChars"
+                [timeTaken]="timeTaken.toString()"
+                [testType]="testType"
+                [testModifier]="testModifier"
+            />
+        </div>
+    }
+</div>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Multiplayerresults } from './multiplayerresults';
+import { Result } from './result';
 
-describe('Multiplayerresults', () => {
-  let component: Multiplayerresults;
-  let fixture: ComponentFixture<Multiplayerresults>;
+describe('Result', () => {
+  let component: Result;
+  let fixture: ComponentFixture<Result>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Multiplayerresults]
+      imports: [Result]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Multiplayerresults);
+    fixture = TestBed.createComponent(Result);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

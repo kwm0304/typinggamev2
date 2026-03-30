@@ -1,21 +1,19 @@
-<div class="h-full w-full flex flex-col items-center justify-center">
-    <h1 class="text-center text-[var(--caret-color)] text-5xl py-24">Results</h1>
 <div class="grid grid-cols-3 gap-12 px-8 py-4 rounded-lg items-center justify-center h-full bg-[var(--sub-alt-color)] inline-flex mx-auto">
 <div>
     <div class="flex flex-col items-center justify-center gap-y-2 ">
         <h2 class="text-[var(--sub-color)]">Type</h2>
-        <p class="text-4xl text-[var(--caret-color)]">{{ testType }}</p>
+        <p class="text-4xl text-[var(--caret-color)]">{{ testType() }}</p>
     </div>
     <div class="flex flex-col items-center justify-center gap-y-2 pt-8">
         <h2 class="text-[var(--sub-color)]">Modifier</h2>
-        <p class="text-4xl text-[var(--caret-color)]">{{ testModifier }}</p>
+        <p class="text-4xl text-[var(--caret-color)]">{{ testModifier() }}</p>
     </div>
-    @if (hasPunctuation) {
+    @if (hasPunctuation()) {
         <div class="flex flex-col items-center justify-center gap-y-2 pt-8">
             <h2 class="text-[var(--caret-color)]">Punctuation</h2>
         </div>
     }
-    @if (hasNumbers) {
+    @if (hasNumbers()) {
         <div class="flex flex-col items-center justify-center gap-y-2 pt-8">
             <h2 class="text-[var(--caret-color)]">Numbers</h2>
         </div>
@@ -26,11 +24,11 @@
 <div>
     <div class="flex flex-col items-center justify-center gap-y-2">
         <h2 class="text-[var(--sub-color)]">WPM</h2>
-        <p class="text-4xl text-[var(--caret-color)]">{{ wpm }}</p>
+        <p class="text-4xl text-[var(--caret-color)]">{{ wpm() }}</p>
     </div>
     <div class="flex flex-col items-center justify-center gap-y-2 pt-8">
         <h2 class="text-[var(--sub-color)]">Accuracy</h2>
-        <p class="text-4xl text-[var(--caret-color)]">{{ accuracy }}%</p>
+        <p class="text-4xl text-[var(--caret-color)]">{{ accuracy() }}%</p>
     </div>
    
 </div>
@@ -38,14 +36,13 @@
     <div class="flex flex-col items-center justify-center gap-y-2">
         <h2 class="text-[var(--sub-color)]">Characters</h2>
         <p class="text-4xl text-[var(--caret-color)]">
-            {{ correctChars }}/{{ incorrectChars}}/{{extraChars}}/{{missedChars}}
+            {{ correctChars() }}/{{ incorrectChars() }}/{{extraChars() }}/{{missedChars() }}
         </p>
     </div>
     <div class="flex flex-col items-center justify-center gap-y-2 pt-8">
         <h2 class="text-[var(--sub-color)]">Time</h2>
-        <p class="text-4xl text-[var(--caret-color)]">{{ timeTaken }}</p>
+        <p class="text-4xl text-[var(--caret-color)]">{{ timeTaken() }}</p>
     </div>
    
-</div>
 </div>
 </div>

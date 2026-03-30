@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Singleplayerresults } from './singleplayerresults';
+import { GameArea } from './game-area';
 
-describe('Singleplayerresults', () => {
-  let component: Singleplayerresults;
-  let fixture: ComponentFixture<Singleplayerresults>;
+describe('GameArea', () => {
+  let component: GameArea;
+  let fixture: ComponentFixture<GameArea>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Singleplayerresults]
+      imports: [GameArea]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Singleplayerresults);
+    fixture = TestBed.createComponent(GameArea);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
