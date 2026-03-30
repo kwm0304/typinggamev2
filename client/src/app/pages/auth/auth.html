@@ -4,7 +4,17 @@
       <app-signupform (signupSubmit)="onSignupReceived($event)"></app-signupform>
     </div>
     <div class="w-full h-full flex items-start justify-center">
+      @if (!isLoggedIn) {
       <app-loginform (loginSubmit)="onLoginReceived($event)"></app-loginform>
+      } @else {
+      <div class="flex flex-col justify-start items-center gap-y-6">
+        <p class="text-[var(--caret-color)]">logged in as: {{userName}}</p>
+        <button
+          class="w-72 py-2 px-4 hover:cursor-pointer hover:bg-[var(--text-color)] hover:text-[var(--sub-alt-color)] rounded-md text-[var(--text-color)] bg-[var(--sub-alt-color)]"
+          (click)="logout()">logout</button>
+      </div>
+
+      }
     </div>
   </div>
 </div>
