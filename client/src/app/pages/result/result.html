@@ -1,49 +1,77 @@
 <div class="h-full w-full flex flex-col items-center justify-center">
-    <h1 class="text-center text-[var(--caret-color)] text-5xl py-24">Results</h1>
-    @if (isSinglePlayer()) {
-        <app-result-table 
-            [hasPunctuation]="hasPunctuation" 
-            [hasNumbers]="hasNumbers"
-            [wpm]="wpm"
-            [accuracy]="accuracy"
-            [correctChars]="correctChars"
-            [incorrectChars]="incorrectChars"
-            [extraChars]="extraChars"
-            [missedChars]="missedChars"
-            [timeTaken]="timeTaken.toString()"
-            [testType]="testType"
-            [testModifier]="testModifier"
+  @if (isSinglePlayer) {
+    <h1 class="text-center text-[var(--caret-color)] text-5xl py-12">Results</h1>
+
+    @if (playerOne; as p1) {
+      <div
+        class="rounded-md border-2 p-2"
+        [class.border-green-500]="winner === p1.username"
+        [class.border-transparent]="winner !== p1.username"
+      >
+        <app-result-table
+          [hasPunctuation]="p1.hasPunctuation"
+          [hasNumbers]="p1.hasNumbers"
+          [wpm]="p1.wpm"
+          [accuracy]="p1.accuracy"
+          [correctChars]="p1.correctChars"
+          [incorrectChars]="p1.incorrectChars"
+          [extraChars]="p1.extraChars"
+          [missedChars]="p1.missedChars"
+          [timeTaken]="p1.timeTaken.toString()"
+          [testType]="p1.testType"
+          [testModifier]="p1.testModifier"
         />
-    } @else {
-        <div class="w-full h-full flex flex-col items-center justify-center">
-            <h2 class="text-[var(--sub-color)] text-3xl mb-12">Player 1</h2>
-            <app-result-table 
-                [hasPunctuation]="hasPunctuation" 
-                [hasNumbers]="hasNumbers"
-                [wpm]="wpm"
-                [accuracy]="accuracy"
-                [correctChars]="correctChars"
-                [incorrectChars]="incorrectChars"
-                [extraChars]="extraChars"
-                [missedChars]="missedChars"
-                [timeTaken]="timeTaken.toString()"
-                [testType]="testType"
-                [testModifier]="testModifier"
-            />
-            <h2 class="text-[var(--sub-color)] text-3xl my-12">Player 2</h2>
-            <app-result-table 
-                [hasPunctuation]="hasPunctuation" 
-                [hasNumbers]="hasNumbers"
-                [wpm]="wpm"
-                [accuracy]="accuracy"
-                [correctChars]="correctChars"
-                [incorrectChars]="incorrectChars"
-                [extraChars]="extraChars"
-                [missedChars]="missedChars"
-                [timeTaken]="timeTaken.toString()"
-                [testType]="testType"
-                [testModifier]="testModifier"
-            />
-        </div>
+      </div>
     }
+  } @else {
+    <div class="w-full h-full flex flex-col items-center justify-center">
+      <h1 class="text-center text-[var(--caret-color)] text-5xl py-12">Results</h1>
+
+      @if (playerOne; as p1) {
+        <h2 class="text-[var(--sub-color)] text-3xl mb-6">{{ p1.username }}</h2>
+        <div
+          class="rounded-md border-2 p-2"
+          [class.border-green-500]="winner === p1.username"
+          [class.border-transparent]="winner !== p1.username"
+        >
+          <app-result-table
+            [hasPunctuation]="p1.hasPunctuation"
+            [hasNumbers]="p1.hasNumbers"
+            [wpm]="p1.wpm"
+            [accuracy]="p1.accuracy"
+            [correctChars]="p1.correctChars"
+            [incorrectChars]="p1.incorrectChars"
+            [extraChars]="p1.extraChars"
+            [missedChars]="p1.missedChars"
+            [timeTaken]="p1.timeTaken.toString()"
+            [testType]="p1.testType"
+            [testModifier]="p1.testModifier"
+          />
+        </div>
+      }
+
+      @if (playerTwo; as p2) {
+        <h2 class="text-[var(--sub-color)] text-3xl my-6">{{ p2.username }}</h2>
+        <div
+          class="rounded-md border-2 p-2"
+          [class.border-green-500]="winner === p2.username"
+          [class.border-transparent]="winner !== p2.username"
+        >
+          <app-result-table
+            [hasPunctuation]="p2.hasPunctuation"
+            [hasNumbers]="p2.hasNumbers"
+            [wpm]="p2.wpm"
+            [accuracy]="p2.accuracy"
+            [correctChars]="p2.correctChars"
+            [incorrectChars]="p2.incorrectChars"
+            [extraChars]="p2.extraChars"
+            [missedChars]="p2.missedChars"
+            [timeTaken]="p2.timeTaken.toString()"
+            [testType]="p2.testType"
+            [testModifier]="p2.testModifier"
+          />
+        </div>
+      }
+    </div>
+  }
 </div>

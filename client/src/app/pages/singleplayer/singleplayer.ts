@@ -1,175 +1,282 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Navbar } from "../../components/navbar/navbar";
-import { Gameclock } from "../../components/gameclock/gameclock";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Navbar } from '../../components/navbar/navbar';
+import { Gameclock } from '../../components/gameclock/gameclock';
 import { Gameboard } from '../../components/gameboard/gameboard';
-import { GameSettings, TestCharacters, TestResults } from '../../types/gametypes';
+import { CharState, CharStatus, GameSettings, PlayerResults, TestResults } from '../../types/gametypes';
 import { Router } from '@angular/router';
+import { GameService } from '../../services/game.service';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  faEarthAfrica
+} from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-singleplayer',
-  imports: [Navbar, Gameclock, Gameboard],
+  imports: [Navbar, Gameclock, Gameboard, FontAwesomeModule],
   templateUrl: './singleplayer.html',
   styleUrl: './singleplayer.css',
+  host: {
+    '(window:keydown)': 'onKeydown($event)',
+  },
 })
 export class Singleplayer implements OnInit, OnDestroy {
+
+  showLanguageModal = false;
+  language: string = 'english';
+   languages = [
+    { label: 'english', value: 'english' },
+    { label: 'spanish', value: 'spanish' },
+    { label: 'french', value: 'french' }, 
+    { label: 'german', value: 'german' },
+    { label: 'italian', value: 'italian' },
+  ];
+
+  visibleText: string = '';
+  visibleCharStates = signal<CharState[]>([]);
   isGameActive = false;
   isGameOver = false;
-  isGameStale = false;
-  externalGameEnd = false;
-  gameSettings: GameSettings ={
+  isGameStale = signal(false);
+
+  gameSettings: GameSettings = {
     hasPunctuation: false,
     hasNumbers: false,
     middleKey: 'time',
-    rightModifier: '30'
+    rightModifier: '30',
+  };
+
+  textLoaded: boolean = false;
+
+  textWall: string = '';
+  charStates: CharState[] = [];
+  userInput: (string | null)[] = [];
+  currentIndex = 0;
+  extraCount = 0;
+
+  elapsedSeconds = 0;
+  remainingSeconds = signal(30);
+  private tickId: ReturnType<typeof setInterval> | null = null;
+  private staleTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  constructor(
+    private router: Router,
+    private gameService: GameService,
+    private cdr: ChangeDetectorRef,
+    private faIconLibrary: FaIconLibrary,
+  ) {
+    this.faIconLibrary.addIcons(faEarthAfrica);
   }
-  timeElapsed: number = 0;
-  private internalTimerId: ReturnType<typeof setInterval> | null = null;
-  canStartTime: boolean = false;
-  pausedGameTime: number | null = null;
-  gameTime: number = 30;
-  gameStats: TestCharacters | null = null;
-  textWall='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-  constructor(private router: Router) {}
-  
+
   ngOnInit(): void {
-    //fetch text from api
-    if (this.gameSettings.middleKey === 'time') {
-      this.gameTime = this.convertTime(this.gameSettings.rightModifier);
-    }
+    this.getGameText();
+  }
+
+  getGameText() {
+    this.gameService.createGame(this.gameSettings).subscribe((data) => {
+      this.textWall = data.text;
+      this.textLoaded = true;
+      this.resetRound();
+    });
   }
 
   ngOnDestroy(): void {
-    this.stopInternalTimer();
+    this.stopTimer();
+    this.clearStaleTimer();
   }
-/*Takes in gameSettings from navbar, fetches text and passes to gameboard
-  If the current game is active and there is a change in settings, pass externalGameEnd to gameboard */
-  onGameStats(stats: TestCharacters) {
-    this.gameStats = stats;
+
+  isGameSettingsUnchanged(settings: GameSettings): boolean {
+    return this.gameService.isGameSettingsUnchanged(this.gameSettings, settings);
   }
+
   onGameSettingsChange(settings: GameSettings) {
-    if (this.isGameActive && !this.isGameOver) {
-      this.externalGameEnd = true;
-      setTimeout(() => {
-        this.externalGameEnd = false;
-      }, 0);
-    }
-    this.gameSettings = settings;
-  }
-  convertTime(modifier: string): number {
-    switch (modifier) {
-      case '10':
-        return 10;
-      case '30':
-        return 30;
-      case '60':
-        return 60;
-      default:
-        return 30;
-    }
-  }
-  public startInternalTimer() {
-    this.stopInternalTimer();
-    this.timeElapsed = 0;
-    this.internalTimerId = setInterval(() => {
-      this.timeElapsed++;
-    }, 1000);
-  }
-
-  public stopInternalTimer() {
-    if (this.internalTimerId) {
-      clearInterval(this.internalTimerId);
-      this.internalTimerId = null;
-    }
-  }
-/*onGame.. and onGameIs.. functions take in state of current game from gameboard */
-getFinalStats() {
-  console.log('finalStats: ', this.gameStats);
-  const gameStats = this.gameStats ?? {
-    correct: 0,
-    incorrect: 0,
-    extra: 0,
-    missed: 0,
-  };
-  const elapsedSeconds = this.timeElapsed || this.convertTime(this.gameSettings.rightModifier);
-  const testResults: TestResults = {
-    rawWPM: elapsedSeconds > 0 ? gameStats.correct / 5 / (elapsedSeconds / 60) : 0,
-    timeTaken: elapsedSeconds,
-    TestType: {
-      test: this.gameSettings.middleKey,
-      modifier: this.gameSettings.rightModifier
-  },
-    TestCharacters: gameStats,
-    hasPunctuation: this.gameSettings.hasPunctuation,
-    hasNumbers: this.gameSettings.hasNumbers
-  };
-  return testResults;
-}
-  onGameStart() {
-    console.log('[Singleplayer] onGameStart received', {
-      middleKey: this.gameSettings.middleKey,
-      rightModifier: this.gameSettings.rightModifier,
-      isGameStale: this.isGameStale,
-    });
-    if (this.gameSettings.middleKey !== 'time') {
-      this.startInternalTimer();
-    }
-    this.isGameActive = true;
-    this.isGameOver = false;
-
-    if (this.gameSettings.middleKey === 'time') {
-      if (!this.isGameStale) {
-        this.gameTime = this.convertTime(this.gameSettings.rightModifier);
-        this.pausedGameTime = null;
-      }
-
-      this.canStartTime = false;
-      queueMicrotask(() => {
-        this.canStartTime = true;
-      });
-    }
-  }
-
-  onGameEnd() {
-    console.log('[Singleplayer] onGameEnd received; navigating to results', {
-      isGameActive: this.isGameActive,
-      isGameOver: this.isGameOver,
-      pausedGameTime: this.pausedGameTime,
-    });
-    this.isGameActive = false;
-    this.isGameOver = true;
-    this.externalGameEnd = false;
-    this.canStartTime = false;
-    this.stopInternalTimer();
-    this.router.navigate(['/results'], {state: {gameStats: this.getFinalStats()}});
-  }
-
-  onTimeOut() {
-    console.log('[Singleplayer] onTimeOut received; delegating end to gameboard');
-    this.externalGameEnd = true;
-    setTimeout(() => {
-      this.externalGameEnd = false;
-    }, 0);
-  }
-
-  onIsGameActiveChange(isGameActive: boolean) {
-    console.log('[Singleplayer] isGameActiveChange received', { isGameActive });
-    this.isGameActive = isGameActive;
-    if (isGameActive) {
-      this.isGameOver = false;
+    const isUnchanged = this.isGameSettingsUnchanged(settings);
+    if (isUnchanged) {
       return;
     }
 
-    this.canStartTime = false;
-    this.stopInternalTimer();
+    if (this.isGameActive) {
+      this.resetRound();
+    }
+    this.gameSettings = settings;
+    this.getGameText();
   }
 
-  onIsGameStaleChange(isGameStale: boolean) {
-    console.log('[Singleplayer] isGameStaleChange received', { isGameStale });
-    setTimeout(() => {
-      this.isGameStale = isGameStale;
-    }, 0);
+  private resetRound() {
+    this.stopTimer();
+    this.clearStaleTimer();
+    this.isGameActive = false;
+    this.isGameOver = false;
+    this.isGameStale.set(false);
+    this.elapsedSeconds = 0;
+    this.remainingSeconds.set(this.gameService.convertTime(this.gameSettings.rightModifier));
+    this.currentIndex = 0;
+    this.extraCount = 0;
+    this.charStates = this.gameService.buildCharStates(this.textWall);
+    this.userInput = new Array(this.charStates.length).fill(null);
+    this.updateVisibleWindow();
   }
 
-  onPausedGameTimeChange(pausedGameTime: number) {
-    this.pausedGameTime = pausedGameTime;
+  onKeydown(event: KeyboardEvent) {
+    if (this.isGameOver) return;
+    const key = this.gameService.normalizeKey(event.key);
+    if (!key) return;
+    event.preventDefault();
+    if (!this.isGameActive) {
+      this.startGame();
+    } else {
+      if (this.isGameStale()) {
+        this.isGameStale.set(false);
+        this.startTimer();
+      }
+      this.startStaleTimer();
+    }
+
+    if (key === 'Backspace') {
+      this.handleBackspace();
+    } else {
+      this.handleCharacter(key);
+    }
+
+    if (this.gameSettings.middleKey !== 'time' && this.currentIndex >= this.charStates.length) {
+      this.endGame();
+    }
+  }
+
+  private startGame() {
+    this.isGameActive = true;
+    this.isGameOver = false;
+    this.isGameStale.set(false);
+    this.startTimer();
+    this.startStaleTimer();
+  }
+
+  private startTimer() {
+    this.stopTimer();
+    this.tickId = setInterval(() => {
+      this.elapsedSeconds++;
+
+      if (this.gameSettings.middleKey === 'time') {
+        this.remainingSeconds.update((seconds) => Math.max(0, seconds - 1));
+        if (this.remainingSeconds() === 0) {
+          this.endGame();
+        }
+      }
+
+      this.cdr.markForCheck();
+    }, 1000);
+  }
+
+  private stopTimer() {
+    if (this.tickId) {
+      clearInterval(this.tickId);
+      this.tickId = null;
+    }
+  }
+
+  private startStaleTimer() {
+    this.clearStaleTimer();
+
+    this.staleTimeoutId = setTimeout(() => {
+      if (this.isGameActive && !this.isGameOver) {
+        this.isGameStale.set(true);
+        this.stopTimer();
+      }
+    }, 3000);
+  }
+
+  private clearStaleTimer() {
+    if (this.staleTimeoutId) {
+      clearTimeout(this.staleTimeoutId);
+      this.staleTimeoutId = null;
+    }
+  }
+
+  private handleBackspace() {
+    if (this.extraCount > 0) {
+      this.extraCount--;
+      return;
+    }
+    if (this.currentIndex === 0) return;
+
+    this.currentIndex--;
+    this.userInput[this.currentIndex] = null;
+    this.charStates = this.charStates.map((state, i) =>
+      i === this.currentIndex ? { ...state, status: 'pending' as CharStatus } : state,
+    );
+    this.updateCurrentMarker();
+  }
+
+  private handleCharacter(key: string) {
+    if (this.currentIndex >= this.charStates.length) {
+      this.extraCount++;
+      return;
+    }
+    this.userInput[this.currentIndex] = key;
+    const nextStatus: CharStatus = key === this.charStates[this.currentIndex].char ? 'correct' : 'incorrect';
+    this.charStates = this.charStates.map((state, i) =>
+      i === this.currentIndex ? { ...state, status: nextStatus } : state,
+    );
+    this.currentIndex++;
+    this.updateCurrentMarker();
+  }
+
+  private updateCurrentMarker() {
+    this.charStates = this.gameService.setCurrentIndex(this.charStates, this.currentIndex);
+    this.updateVisibleWindow();
+  }
+
+  private updateVisibleWindow() {
+    const visibleChars = this.gameService.getVisibleText(this.charStates, this.currentIndex);
+    this.visibleCharStates.set(visibleChars);
+    this.visibleText = this.gameService.getVisibleTextString(visibleChars);
+    this.cdr.detectChanges();
+  }
+  
+
+  private endGame() {
+    if (this.isGameOver) return;
+
+    this.isGameActive = false;
+    this.isGameOver = true;
+    this.isGameStale.set(false);
+    this.stopTimer();
+    this.clearStaleTimer();
+
+    const playerResults: PlayerResults[] = [
+      {
+        username: 'Player 1',
+        testResults: this.getFinalStats(),
+      },
+    ];
+
+    this.router.navigate(['/results'], { state: { playerResults } });
+  }
+
+  private getFinalStats(): TestResults {
+    const stats = this.gameService.getFinalChars(this.charStates, this.extraCount);
+    const totalSeconds =
+      this.gameSettings.middleKey === 'time'
+        ? this.gameService.convertTime(this.gameSettings.rightModifier)
+        : this.elapsedSeconds;
+
+    return {
+      rawWPM: this.gameService.getRawWPM(totalSeconds, stats.correct),
+      timeTaken: totalSeconds,
+      TestType: {
+        test: this.gameSettings.middleKey,
+        modifier: this.gameSettings.rightModifier,
+      },
+      TestCharacters: stats,
+      hasPunctuation: this.gameSettings.hasPunctuation,
+      hasNumbers: this.gameSettings.hasNumbers,
+    };
+  }
+
+  public toggleShowModal() {
+    this.showLanguageModal = true;
+  }
+   public selectLanguage(language: string) {
+    this.language = language;
+    this.showLanguageModal = false;
   }
 }

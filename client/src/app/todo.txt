@@ -1,3 +1,7 @@
-1. Consoloidate singleplayerresult & multiplayerresult -> result & either map over results or do ngcontainer
-2. Pull as much state and logic out of gameboard as possible and put as service methods if possible so it can be used for single & multiplayer
+X. Consoloidate singleplayerresult & multiplayerresult -> result & either map over results or do ngcontainer
+X. Pull as much state and logic out of gameboard as possible and put as service methods if possible so it can be used for single & multiplayer
 3. Maybe get rid of auth guards since only protected route will be saving the gameboard
+
+3/30
+1. Get Login and signup working
+2. Get external auth working

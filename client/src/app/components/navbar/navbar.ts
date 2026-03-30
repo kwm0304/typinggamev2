@@ -96,7 +96,7 @@ export class Navbar implements OnInit {
   ];
   wordItems = [
     { label: '10', index: 0, isSelected: false, onClick: () => this.selectItem(0) },
-    { label: '25', index: 1, isSelected: false, onClick: () => this.selectItem(1) },
+    { label: '25', index: 1, isSelected: true, onClick: () => this.selectItem(1) },
     { label: '50', index: 2, isSelected: false, onClick: () => this.selectItem(2) },
     { label: '100', index: 3, isSelected: false, onClick: () => this.selectItem(3) },
     {
@@ -146,6 +146,12 @@ export class Navbar implements OnInit {
     this.selectedMiddle = key;
     this.gameSettings.middleKey = key;
     this.rightNavItems = this.rightNavMap[key];
+
+    const selectedRight = this.rightNavItems.find((item) => item.isSelected) ?? this.rightNavItems[0];
+    if (selectedRight?.label) {
+      this.gameSettings.rightModifier = selectedRight.label;
+    }
+
     this.emitGameSettings();
   }
   public selectItem(index: number, middleKey: MiddleNavKey = this.selectedMiddle) {

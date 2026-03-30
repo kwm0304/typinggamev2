@@ -5,11 +5,37 @@ export interface UserInput {
 };
 
 export interface CharState {
-  correct: boolean;
-  incorrect: boolean;
-  active: boolean;
-  index: number;
+  char: string;
+  status: CharStatus;
+  isCurrent: boolean;
 };
+export type CharStatus = 'pending' | 'correct' | 'incorrect';
+
+export interface GameState { 
+  gameTextArrays: GameTextArrays;
+  gameText: GameText;
+  gameCounters: GameCounters;
+  gameControls: GameControls;
+}
+export interface GameTextArrays {
+  visibleCharStates: CharState[];
+  userInput: (string | null)[];
+  charStates: CharState[];
+}
+export interface GameText {
+  textWall: string;
+  visibleText: string;
+}
+export interface GameControls {
+  isGameActive: boolean;
+  isGameOver: boolean;
+  isGameStale: boolean;
+}
+export interface GameCounters {
+  elapsedSeconds: number;
+  currentIndex: number;
+  extraCount: number;
+}
 
 export interface GameSettings {
   hasPunctuation: boolean;
@@ -45,4 +71,9 @@ export interface TestResults {
   TestCharacters: TestCharacters;
   hasPunctuation?: boolean;
   hasNumbers?: boolean;
+  accuracy?: string;
+}
+export interface PlayerResults {
+  username: string;
+  testResults: TestResults;
 }
