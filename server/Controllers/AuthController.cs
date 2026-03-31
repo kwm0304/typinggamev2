@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Models.DTOs;
 using server.Models.Entities;
 using server.Services.Interfaces;
+using System.Security.Claims;
 
 namespace server.Controllers
 {
@@ -34,6 +36,34 @@ namespace server.Controllers
                     Username = user.UserName,
                     Email = user.Email
                 });
+        }
+        [HttpGet("github/login")]
+        public IActionResult Login()
+        {
+            return Challenge(new AuthenticationProperties
+            {
+                RedirectUri = "/api/Auth/github/callback"
+            }, "GitHub");
+        }
+        [HttpGet("github/callback")]
+        public async Task<IActionResult> Callback()
+        {
+            var result = await HttpContext.AuthenticateAsync("GitHub");
+
+            if (!result.Succeeded)
+                return Unauthorized();
+
+            var claims = result.Principal!.Claims;
+
+            var user = new AppUser
+            {
+                UserName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value,
+                Email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value
+            };
+
+            var token = _tokenService.CreateToken(user);
+
+            return Redirect($"http://localhost:4200/auth/callback?token={token}");
         }
 
         [HttpPost("register")]

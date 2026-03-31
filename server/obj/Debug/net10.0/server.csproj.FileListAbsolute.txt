@@ -159,3 +159,5 @@ C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\refint\server.dll
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\server.pdb
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\server.genruntimeconfig.cache
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\ref\server.dll
+C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\AspNet.Security.OAuth.GitHub.dll

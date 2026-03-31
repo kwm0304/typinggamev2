@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "uFsqWfemJ2o=",
+  "dgSpecHash": "cSa5pD1Rnoo=",
   "success": true,
   "projectFilePath": "C:\\Users\\mcken\\repos\\typinggamev2\\server\\server.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\mcken\\.nuget\\packages\\aspnet.security.oauth.github\\10.0.0\\aspnet.security.oauth.github.10.0.0.nupkg.sha512",
     "C:\\Users\\mcken\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\mcken\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
     "C:\\Users\\mcken\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

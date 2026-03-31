@@ -52,6 +52,13 @@ builder.Services.AddAuthentication(options =>
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])
         )
     };
+})
+.AddGitHub(options =>
+{
+    options.ClientId = builder.Configuration["GitHub:ClientId"]!;
+    options.ClientSecret = builder.Configuration["GitHub:ClientSecret"]!;
+    options.CallbackPath = "/api/Auth/github/callback";
+    options.Scope.Add("user:email");
 });
 
 builder.Services.AddHttpClient<GameTextApiClient>(client =>
