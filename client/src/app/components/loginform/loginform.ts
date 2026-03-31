@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './loginform.css',
 })
 export class Loginform {
+  githubLogin = output<void>();
   userInfo: LoginDto = {
     email: '',
     password: '',
@@ -35,7 +36,6 @@ constructor(private faIconLibrary: FaIconLibrary) {
     console.log('Google Sign-In clicked');
   }
   signInWithGithub() {
-    // Implement GitHub Sign-In logic here
-    console.log('GitHub Sign-In clicked');
-  }
+  this.githubLogin.emit();
+}
 }

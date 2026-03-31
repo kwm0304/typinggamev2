@@ -23,4 +23,7 @@ export class HomeService {
     }
     return this.http.post(`${this.baseUrl}/register`, signupDto);
   }
+  public githubLogin(): Observable<object> {
+    return this.http.get(`${this.baseUrl}/github/login`);
+  }
 }

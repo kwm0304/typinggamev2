@@ -14,10 +14,38 @@ import { UserService } from '../../services/user.service';
 export class Auth implements OnInit{
   isLoggedIn: boolean = false;
   userName: string = '';
+  tokenKey: string = '';
   constructor(private readonly homeService: HomeService, private readonly alertService: AlertService, private readonly userService: UserService) {}
   ngOnInit(): void {
     
   }
+  loginWithGitHub(): void {
+  const popup = window.open(
+    `http://localhost:5262/api/Auth/github/login`,
+    'GitHub Login',
+    'width=600,height=700,scrollbars=yes,resizable=yes'
+  );
+
+  // Listen for the callback message from the popup
+  window.addEventListener('message', (event) => {
+    if (event.origin !== 'http://localhost:4200') return;
+    if (event.data?.token) {
+      this.handleCallback(event.data.token);
+      popup?.close();
+    }
+  }, { once: true });
+}
+handleCallback(token: string): void {
+  this.tokenKey = token;
+
+  // Decode the JWT payload (it's just base64)
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  this.userService.setUser({
+    Token: token,
+    Username: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+    Email: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress']
+  });
+}
   onSignupReceived(signupData: any) {
     console.log('Signup data received in Auth component:', signupData);
     // Handle the signup data, e.g., send it to a service for processing

@@ -3,5 +3,5 @@ X. Pull as much state and logic out of gameboard as possible and put as service 
 3. Maybe get rid of auth guards since only protected route will be saving the gameboard
 
 3/30
-1. Get Login and signup working
+X. Get Login and signup working
 2. Get external auth working

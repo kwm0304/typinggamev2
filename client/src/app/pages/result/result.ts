@@ -3,6 +3,7 @@ import { ResultTable } from '../../components/result-table/result-table';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { PlayerResults, TestResults } from '../../types/gametypes';
+import { UserService } from '../../services/user.service';
 
 interface ResultViewModel {
   username: string;
@@ -36,7 +37,10 @@ export class Result implements OnInit {
   // each player gets their own mapped variables
   playerOne: ResultViewModel | null = null;
   playerTwo: ResultViewModel | null = null;
+  username: string = '';
+  constructor(private readonly userService: UserService) {
 
+  }
   ngOnInit() {
     const state = this.location.getState() as { playerResults?: PlayerResults[] };
     this.playerResults = state?.playerResults ?? [];
@@ -50,6 +54,9 @@ export class Result implements OnInit {
       ? this.toViewModel(this.playerResults[1])
       : null;
       this.winner = this.getWinner();
+      if (this.playerOne) {
+        this.playerOne.username = this.userService.username();
+      }
   }
 public getWinner(): string {
   if (!this.isSinglePlayer && this.playerOne && this.playerTwo) {

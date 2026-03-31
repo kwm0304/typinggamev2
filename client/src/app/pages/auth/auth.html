@@ -5,7 +5,7 @@
     </div>
     <div class="w-full h-full flex items-start justify-center">
       @if (!isLoggedIn) {
-      <app-loginform (loginSubmit)="onLoginReceived($event)"></app-loginform>
+      <app-loginform (loginSubmit)="onLoginReceived($event)" (githubLogin)="loginWithGitHub()"></app-loginform>
       } @else {
       <div class="flex flex-col justify-start items-center gap-y-6">
         <p class="text-[var(--caret-color)]">logged in as: {{userName}}</p>
