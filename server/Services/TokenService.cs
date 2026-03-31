@@ -13,14 +13,15 @@ namespace server.Services
         public TokenService(IConfiguration config)
         {
             _config = config;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]!));
         }
         public string CreateToken(AppUser user)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
+                new(JwtRegisteredClaimNames.Email, user.Email!),
+                new(JwtRegisteredClaimNames.GivenName, user.UserName!),
+                new(JwtRegisteredClaimNames.Name, user.UserName!)
             };
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
             var descriptor = new SecurityTokenDescriptor

@@ -8,5 +8,6 @@ namespace server.Models.Entities
             public string? LastName { get; set; }
             public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
             public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+            public ICollection<TestResult> Results { get; set; } = [];
     }
 }

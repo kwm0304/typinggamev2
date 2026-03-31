@@ -17,6 +17,12 @@ namespace server.Data
             {
                 entity.HasKey(tr => tr.Id);
 
+                entity.HasOne(tr => tr.User)
+      .WithMany(u => u.Results)
+      .HasForeignKey(tr => tr.UserId)
+      .OnDelete(DeleteBehavior.Restrict)
+      .IsRequired();
+
                 // Configure owned value object for TestCharacters
                 entity.OwnsOne(tr => tr.TestCharacters, owned =>
                 {
@@ -26,11 +32,24 @@ namespace server.Data
                     owned.Property(tc => tc.Missed).HasColumnName("MissedCharacters");
                 });
 
-                // Optional: map enum as string instead of int
 
                 entity.Property(tr => tr.TestType)
-              .HasMaxLength(50)
-              .HasColumnType("nvarchar(50)");
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
+                entity.Property(tr => tr.TestModifier)
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
+            });
+
+            builder.Entity<MutltiplayerTestResult>(entity =>
+            {
+                entity.HasKey(mtr => mtr.Id);
+                entity.HasOne(mtr => mtr.WinningTestResult)
+                    .WithMany()
+                    .HasForeignKey(mtr => mtr.WinningTestResultId);
+                entity.HasOne(mtr => mtr.LosingTestResult)
+                    .WithMany()
+                    .HasForeignKey(mtr => mtr.LosingTestResultId);
             });
         }
     }

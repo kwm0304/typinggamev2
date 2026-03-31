@@ -6,9 +6,11 @@ C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\server.deps.json
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\server.runtimeconfig.json
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\server.dll
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\server.pdb
+C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\AspNet.Security.OAuth.GitHub.dll
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\Azure.Core.dll
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\Azure.Identity.dll
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\Humanizer.dll
+C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.Google.dll
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
@@ -153,11 +155,10 @@ C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\staticwebassets.build
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\staticwebassets.development.json
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\server.csproj.Up2Date
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\server.dll
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\refint\server.dll
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\server.pdb
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\server.genruntimeconfig.cache
 C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\ref\server.dll
-C:\Users\mcken\repos\typinggamev2\server\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-C:\Users\mcken\repos\typinggamev2\server\bin\Debug\net10.0\AspNet.Security.OAuth.GitHub.dll

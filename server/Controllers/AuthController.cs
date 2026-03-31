@@ -30,13 +30,72 @@ namespace server.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
             if (!result.Succeeded) return Unauthorized("Username not found and/or password incorrect");
             return Ok(
-                new AuthResponse
+                new AuthResponseDTO
                 {
                     Token = _tokenService.CreateToken(user),
                     Username = user.UserName,
-                    Email = user.Email
+                    Email = user.Email,
+                    UserId = user.Id
                 });
         }
+        [HttpGet("google/login")]
+        public IActionResult GoogleLogin()
+        {
+            string provider = "Google";
+
+            // Match the exact casing from your Google Console: /api/Auth/google/callback
+            // We pass the absolute URL to ensure consistency
+            var redirectUrl = "http://localhost:5262/api/Auth/google/callback";
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            // Explicitly allow the return to the callback
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet("google/callback")]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            // 1. Authenticate the external cookie
+            var result = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
+
+            if (!result.Succeeded)
+            {
+                return Unauthorized("External authentication failed or session expired (OAuth state invalid).");
+            }
+
+            var claims = result.Principal!.Claims;
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(email)) return BadRequest("Email not provided by Google.");
+
+            // 2. Check if user exists in our DB
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                // 3. Create user if they don't exist
+                user = new AppUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true
+                };
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded) return BadRequest(createResult.Errors);
+            }
+
+            // 4. Generate our internal JWT for the Angular app
+            var token = _tokenService.CreateToken(user);
+
+            // 5. Cleanup the external cookie
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            // 6. Redirect to the Angular callback page
+            return Redirect($"http://localhost:4200/auth/callback?token={token}");
+        }
+
         [HttpGet("github/login")]
         public IActionResult Login()
         {
@@ -48,7 +107,7 @@ namespace server.Controllers
         [HttpGet("github/callback")]
         public async Task<IActionResult> Callback()
         {
-            var result = await HttpContext.AuthenticateAsync("GitHub");
+            var result = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
 
             if (!result.Succeeded)
                 return Unauthorized();
@@ -78,17 +137,19 @@ namespace server.Controllers
                 var appUser = new AppUser
                 {
                     UserName = dto.Username,
-                    Email = dto.Email
+                    Email = dto.Email,
+                    NormalizedUserName = dto.Username
                 };
                 var newUser = await _userManager.CreateAsync(appUser, dto.Password);
                 if (newUser.Succeeded)
                 {
                     return Ok(
-                        new AuthResponse
+                        new AuthResponseDTO
                         {
                             Token = _tokenService.CreateToken(appUser),
                             Username = appUser.UserName,
-                            Email = appUser.Email
+                            Email = appUser.Email,
+                            UserId = appUser.Id
                         });
                 }
                 else

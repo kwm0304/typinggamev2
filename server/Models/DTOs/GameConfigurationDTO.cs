@@ -1,5 +1,8 @@
 ﻿namespace server.Models.DTOs
 {
+    /// <summary>
+    /// Game parameters that dictate how the text is generated and modified
+    /// </summary>
     public class GameConfigurationDTO
     {
         public bool HasPunctuation { get; set; }
@@ -11,6 +14,5 @@
         public string? QuoteSize { get; set; }
         public int? GameTextLength { get; set; }
         public int? GameTimeLengthSeconds { get; set; }
-        //15=100 words,30=200 words; 1 minute= 400; 2 minutes= 800
     }
 }
