@@ -65,15 +65,27 @@ export interface TestCharacters {
   missed: number;
 }
 export interface TestResults {
+  userName: string;
   rawWPM: number;
+  wpm: number;
   timeTaken: number;
   TestType: TestType;
   TestCharacters: TestCharacters;
   hasPunctuation?: boolean;
   hasNumbers?: boolean;
-  accuracy?: string;
+  accuracy?: number | string;
 }
 export interface PlayerResults {
   username: string;
   testResults: TestResults;
+}
+
+export interface LeaderboardEntry {
+Rank: number;
+Username: string;
+WPM: number;
+Accuracy: string;
+RawWPM: number;
+PlayedAt: string;
+
 }

@@ -8,7 +8,7 @@ import { UserService } from '../../services/user.service';
 interface ResultViewModel {
   username: string;
   results: TestResults;
-  accuracy: string;
+  accuracy: number | string;
   wpm: number;
   testType: string;
   testModifier: string;
@@ -60,8 +60,8 @@ export class Result implements OnInit {
   }
 public getWinner(): string {
   if (!this.isSinglePlayer && this.playerOne && this.playerTwo) {
-    let p1Total = this.playerOne.results.rawWPM * parseFloat(this.playerOne.results.accuracy ?? '0');
-    let p2Total = this.playerTwo.results.rawWPM * parseFloat(this.playerTwo.results.accuracy ?? '0');
+    let p1Total = this.playerOne.results.rawWPM * parseFloat((this.playerOne.results.accuracy ?? '0').toString());
+    let p2Total = this.playerTwo.results.rawWPM * parseFloat((this.playerTwo.results.accuracy ?? '0').toString());
     if (p1Total > p2Total) {
       return this.playerOne.username;
     } else if (p2Total > p1Total) {
@@ -75,15 +75,12 @@ public getWinner(): string {
 }
   private toViewModel(player: PlayerResults): ResultViewModel {
     const r = player.testResults;
-    const totalTyped = r.TestCharacters.correct + r.TestCharacters.incorrect;
-    const accuracy = totalTyped > 0
-      ? ((r.TestCharacters.correct / totalTyped) * 100).toFixed(2)
-      : '0.00';
+    
 
     return {
       username: player.username,
       results: r,
-      accuracy,
+      accuracy: r.accuracy ?? 0,
       wpm: r.rawWPM,
       testType: r.TestType.test,
       testModifier: r.TestType.modifier,

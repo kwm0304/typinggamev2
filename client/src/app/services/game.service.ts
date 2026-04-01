@@ -12,12 +12,28 @@ interface GameTextResponse {
 })
 export class GameService {
   constructor(private http: HttpClient) {}
-  private baseUrl = 'http://localhost:5262/api';
+  private baseUrl = 'http://localhost:5262/api/Game';
   private readonly charsPerLine = 55;
   private readonly visibleLineCount = 3;
 
-  public createGame(gameSettings: GameSettings): Observable<GameTextResponse> {
-    const formattedGameSettings = {
+  /*------------API------------- */
+  public getGameText(gameSettings: GameSettings): Observable<GameTextResponse> {
+    const formattedGameSettings = this.formatDtoForServer(gameSettings);
+    return this.http.post<GameTextResponse>(
+      `${this.baseUrl}/create/singleplayer`,
+      formattedGameSettings,
+    );
+  }
+  public getMultiplayerGameText(): Observable<GameTextResponse> {
+    return this.http.get<GameTextResponse>(`${this.baseUrl}/create/multiplayer`);
+  }
+
+  public saveSinglePlayerResult(resultData: any): Observable<object> {
+    return this.http.post(`${this.baseUrl}/save/singleplayer`, resultData);
+  }
+/*-----------API Helper------------- */
+  public formatDtoForServer(gameSettings: GameSettings): any {
+    return {
       HasPunctuation: gameSettings.hasPunctuation,
       HasNumbers: gameSettings.hasNumbers,
       IsTimed: gameSettings.middleKey === 'time',
@@ -30,13 +46,8 @@ export class GameService {
       GameTimeLengthSeconds:
         gameSettings.middleKey === 'time' ? parseInt(gameSettings.rightModifier, 10) : undefined,
     };
-    return this.http.post<GameTextResponse>(`${this.baseUrl}/Game`, formattedGameSettings);
   }
-
-  public getGameText(gameSettings: GameSettings): Observable<GameTextResponse> {
-    return this.createGame(gameSettings);
-  }
-
+/*-----------In Game Helper functions------------- */
   public isGameSettingsUnchanged(current: GameSettings, next: GameSettings): boolean {
     return (
       current.hasPunctuation === next.hasPunctuation &&
@@ -103,7 +114,11 @@ export class GameService {
   }
 
   public getRawWPM(seconds: number, correctNum: number): number {
-    return seconds > 0 ? (correctNum / 5) / (seconds / 60) : 0;
+    return seconds > 0 ? correctNum / 5 / (seconds / 60) : 0;
+  }
+  public getWPM(seconds: number, stats: TestCharacters): number {
+    const grossWPM = this.getRawWPM(seconds, stats.correct);
+    const accuracy = stats.correct + stats.incorrect > 0 ? stats.correct / (stats.correct + stats.incorrect) : 0;
+    return Math.round(grossWPM * accuracy);
   }
 }
-

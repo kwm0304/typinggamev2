@@ -10,6 +10,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faEarthAfrica
 } from '@fortawesome/free-solid-svg-icons';
+import { HomeService } from '../../services/home.service';
+import { UserService } from '../../services/user.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-singleplayer',
@@ -21,7 +24,7 @@ import {
   },
 })
 export class Singleplayer implements OnInit, OnDestroy {
-
+  user: any;
   showLanguageModal = false;
   language: string = 'english';
    languages = [
@@ -63,16 +66,21 @@ export class Singleplayer implements OnInit, OnDestroy {
     private gameService: GameService,
     private cdr: ChangeDetectorRef,
     private faIconLibrary: FaIconLibrary,
+    private userService: UserService,
+    private alertService: AlertService
   ) {
     this.faIconLibrary.addIcons(faEarthAfrica);
   }
 
   ngOnInit(): void {
     this.getGameText();
+    if (this.userService.isLoggedIn()) {
+      this.user = this.userService.user();
+    }
   }
 
   getGameText() {
-    this.gameService.createGame(this.gameSettings).subscribe((data) => {
+    this.gameService.getGameText(this.gameSettings).subscribe((data) => {
       this.textWall = data.text;
       this.textLoaded = true;
       this.resetRound();
@@ -184,6 +192,8 @@ export class Singleplayer implements OnInit, OnDestroy {
     }, 3000);
   }
 
+
+
   private clearStaleTimer() {
     if (this.staleTimeoutId) {
       clearTimeout(this.staleTimeoutId);
@@ -232,7 +242,6 @@ export class Singleplayer implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
   
-
   private endGame() {
     if (this.isGameOver) return;
 
@@ -241,15 +250,42 @@ export class Singleplayer implements OnInit, OnDestroy {
     this.isGameStale.set(false);
     this.stopTimer();
     this.clearStaleTimer();
-
-    const playerResults: PlayerResults[] = [
-      {
+    let playerResults: PlayerResults;
+    if (!this.user) {
+      playerResults = {
         username: 'Player 1',
         testResults: this.getFinalStats(),
-      },
-    ];
+      };
+    } else {
+      playerResults = {
+        username: this.user.username,
+        testResults: this.getFinalStats(),
+      };
+      const testCharacters = {
+        Correct: playerResults.testResults.TestCharacters.correct,
+        Incorrect: playerResults.testResults.TestCharacters.incorrect,
+        Extra: playerResults.testResults.TestCharacters.extra,
+        Missed: playerResults.testResults.TestCharacters.missed,
+      }
+      const testResultDTO = {
+        UserId: this.user.userId,
+        WPM: parseFloat(playerResults.testResults.wpm.toString()),
+        RawWPM: playerResults.testResults.rawWPM,
+        Accuracy: parseFloat(playerResults.testResults.accuracy?.toString() ?? '0'),
+        TimeTaken: playerResults.testResults.timeTaken,
+        TestType: playerResults.testResults.TestType.test,
+        TestModifier: playerResults.testResults.TestType.modifier,
+        TestCharacters: testCharacters,
+      }
+      this.gameService.saveSinglePlayerResult(testResultDTO).subscribe((data) => {
+        this.alertService.show('Your result has been saved!', 'success');
+      }, (error) => {
+        this.alertService.show('Error saving result: ' + error.message, 'error');
+      })
+    }
+    
 
-    this.router.navigate(['/results'], { state: { playerResults } });
+    this.router.navigate(['/results'], { state: { playerResults: [playerResults] } });
   }
 
   private getFinalStats(): TestResults {
@@ -258,9 +294,22 @@ export class Singleplayer implements OnInit, OnDestroy {
       this.gameSettings.middleKey === 'time'
         ? this.gameService.convertTime(this.gameSettings.rightModifier)
         : this.elapsedSeconds;
-
+/*userName: string;
+  rawWPM: number;
+  wpm: number;
+  timeTaken: number;
+  TestType: TestType;
+  TestCharacters: TestCharacters;
+  hasPunctuation?: boolean;
+  hasNumbers?: boolean;
+  accuracy?: string; */
+  const totalTyped = stats.correct + stats.incorrect;
+    const accuracy = totalTyped > 0 ? ((stats.correct / totalTyped) * 100).toFixed(2) : '0.00';
     return {
+
+      userName: this.user.username,
       rawWPM: this.gameService.getRawWPM(totalSeconds, stats.correct),
+      wpm: this.gameService.getWPM(totalSeconds, stats),
       timeTaken: totalSeconds,
       TestType: {
         test: this.gameSettings.middleKey,
@@ -269,6 +318,7 @@ export class Singleplayer implements OnInit, OnDestroy {
       TestCharacters: stats,
       hasPunctuation: this.gameSettings.hasPunctuation,
       hasNumbers: this.gameSettings.hasNumbers,
+      accuracy: accuracy,
     };
   }
 

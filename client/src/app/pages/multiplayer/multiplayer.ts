@@ -149,7 +149,7 @@ export class Multiplayer implements OnInit, OnDestroy {
 
     if (this.currentPlayer === 'p1') {
       // P1 fetches text and sends it to P2 so both play the same text
-      this.gameService.createGame(this.gameSettings).subscribe((data) => {
+      this.gameService.getGameText(this.gameSettings).subscribe((data) => {
         this.textWall = data.text;
         this.resetGame();
         this.hubService.sendGameText(this.gameId!, currentUsername || 'player', this.textWall);
@@ -398,7 +398,9 @@ export class Multiplayer implements OnInit, OnDestroy {
         : this.elapsedSeconds;
 
     return {
+      userName: this.userService.user()?.username,
       rawWPM: this.gameService.getRawWPM(totalSeconds, stats.correct),
+      wpm: this.gameService.getWPM(totalSeconds, stats),
       timeTaken: totalSeconds,
       TestType: {
         test: this.gameSettings.middleKey,

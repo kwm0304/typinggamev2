@@ -1,1 +1,17 @@
-<p>leaderboard works!</p>
+<div class="h-full w-full flex justify-center items-center">
+    <ul>
+        @for (item of leaderboardData; track $index)
+        {
+        <li class="list-row" [ngClass]="$index % 2 === 0 ? 'bg-[var(--sub-alt-color)]' : 'bg-[var(--bg-color)]'">
+            <div class="flex gap-4 items-center">
+                <span class="text-[var(--sub-color)] w-12 text-right">{{item.Rank}}.</span>
+                <span class="text-[var(--text-color)] w-48">{{item.Username}}</span>
+                <span class="text-[var(--caret-color)] w-24 text-right">{{item.WPM}} WPM</span>
+                <span class="text-[var(--sub-alt-color)] w-24 text-right">{{item.Accuracy}}</span>
+                <span class="text-[var(--sub-color)] w-24 text-right">{{item.RawWPM}} Raw WPM</span>
+                <span class="text-[var(--sub-alt-color)] w-48 text-right">{{item.PlayedAt | date:'short'}}</span>
+            </div>
+        </li>
+        }
+    </ul>
+</div>
