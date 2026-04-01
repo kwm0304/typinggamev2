@@ -5,3 +5,8 @@ X. Pull as much state and logic out of gameboard as possible and put as service 
 3/30
 X. Get Login and signup working
 2. Get external auth working
+
+3/31
+1. Remove external auth
+2. Get Hubs working
+3. Save games

@@ -1,1 +1,29 @@
-<p>multiplayer works!</p>
+<div class="w-full h-screen flex flex-col gap-4 p-4">
+  <!-- Game Clock -->
+   <div class="flex w-full items-center justify-start pt-32">
+        <app-gameclock [startTime]="remainingSeconds()"></app-gameclock>
+   </div>
+ 
+
+  <!-- Two Player Gameboards -->
+  <div class="grid grid-rows-2 gap-4 flex-1 max-h-[75vh]">
+    <!-- Player One -->
+    <div class="flex-1 flex-col ">
+      <h2 class="text-lg font-bold mb-2 text-center text-[var(--caret-color)]">{{ playerOne()?.username }}</h2>
+      <app-gameboard [chars]="playerOneVisibleCharStates()"></app-gameboard>
+    </div>
+
+    <!-- Player Two -->
+    <div class="flex-1 flex-col ">
+      <h2 class="text-lg font-bold mb-2 text-center text-[var(--caret-color)]">{{ playerTwo()?.username }}</h2>
+      <app-gameboard [chars]="playerTwoVisibleCharStates()"></app-gameboard>
+    </div>
+  </div>
+</div>
+@if (displayInstructions) {
+  <dialog #countdownModal class="modal">
+    <div class="modal-box h-[60vh]">
+      <app-countdown-window (closeInstructions)="onCountdownClosed()"></app-countdown-window>
+    </div>
+  </dialog>
+}

@@ -4,5 +4,8 @@
 
 /server/Properties/launchSettings.json
 /server/server.csproj
+/server/**/bin/
+/server/**/obj/
+/server/appsettings.json
 server/appsettings.json
 server/appsettings.json

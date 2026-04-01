@@ -3,6 +3,7 @@
     <h2>log in</h2>
 </div>
 <form class="flex flex-col gap-y-1" (ngSubmit)="submitLogin()">
+    <!--
     <div class="flex w-72 items-center justify-between">
         <button type="button"
             class="hover:cursor-pointer flex justify-center items-center  text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none hover:bg-[var(--text-color)] hover:text-[var(--sub-alt-color)] flex gap-1 w-34 rounded-md h-9"
@@ -17,7 +18,7 @@
     </div>
     <div class="divider text-[var(--sub-alt-color)] before:opacity-100 after:opacity-100">
         <span class="text-[var(--text-color)]">or</span>
-    </div>
+    </div>-->
     <input type="email" placeholder="Email"
         class="input rounded-md input- w-72 max-w-md text-[var(--text-color)] bg-[var(--sub-alt-color)] border-none"
         [(ngModel)]="userInfo.email" name="email" required>

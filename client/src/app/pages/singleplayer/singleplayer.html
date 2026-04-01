@@ -7,7 +7,7 @@
     </div>
 
     <div class="pt-24">
-        @if (gameSettings.middleKey === 'time' && !isGameOver && !isGameStale()) {
+        @if (gameSettings.middleKey === 'time' && !isGameOver && !isGameStale() && textLoaded) {
         <app-gameclock [startTime]="remainingSeconds()" />
         }
         @if (!isGameActive || isGameStale()) {

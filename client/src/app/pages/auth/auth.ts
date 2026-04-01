@@ -19,6 +19,21 @@ export class Auth implements OnInit{
   ngOnInit(): void {
     
   }
+  loginWithGoogle(): void {
+    const popup = window.open(
+    `http://localhost:5262/api/Auth/google/login`,
+    'Google Login',
+    'width=600,height=700,scrollbars=yes,resizable=yes'
+  );
+
+  window.addEventListener('message', (event) => {
+    if (event.origin !== 'http://localhost:4200') return;
+    if (event.data?.token) {
+      this.handleCallback(event.data.token);
+      popup?.close();
+    }
+  }, { once: true });
+  }
   loginWithGitHub(): void {
   const popup = window.open(
     `http://localhost:5262/api/Auth/github/login`,
@@ -37,7 +52,7 @@ export class Auth implements OnInit{
 }
 handleCallback(token: string): void {
   this.tokenKey = token;
-
+  console.log('token received in Auth component:', token);
   // Decode the JWT payload (it's just base64)
   const payload = JSON.parse(atob(token.split('.')[1]));
   this.userService.setUser({
