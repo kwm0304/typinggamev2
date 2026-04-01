@@ -11,5 +11,6 @@ namespace server.Models.DTOs
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters long")]
         public required string Password { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

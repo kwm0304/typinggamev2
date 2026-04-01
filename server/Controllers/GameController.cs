@@ -4,75 +4,63 @@ using server.Models.DTOs;
 namespace server.Controllers
 {
     
-    public class GameController(IGameService gameService) : BaseController
+    public class GameController(IGameService gameService, ILogger<GameController> logger) : BaseController
     {
         private readonly IGameService _gameService = gameService;
+        private readonly ILogger<GameController> _logger = logger;
 
         /// <summary>
         /// Gets game text from external API
         /// </summary>
         /// <returns>Game text from external API</returns>    
-        [HttpPost]
-        public async Task<ActionResult<GameTextDTO>> CreateGame([FromBody] GameConfigurationDTO configDto)
+        /// http://localhost:5262/api/Game/create/singleplayer
+
+        [HttpPost("create/singleplayer")]
+        public async Task<ActionResult<GameTextDTO>> CreateSinglePlayerGame([FromBody] GameConfigurationDTO configDto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Required fields are missing or misconfigured, unable to save");
-                }
-                GameTextDTO gameTextDTO = await _gameService.CreateGameAsync(configDto);
-                return Ok(gameTextDTO);
+                _logger.LogError("Invalid game configuration received: {@ConfigDto} in {Method}", configDto, nameof(CreateSinglePlayerGame));
+                return BadRequest("Required fields are missing or misconfigured, unable to save");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error creating game: {ex.Message}");
-            }
+            GameTextDTO gameTextDTO = await _gameService.CreateGameAsync(configDto);
+            return Ok(gameTextDTO);
         }
         /// <summary>
         /// returns game text with preset configuration for multiplayer game
         /// </summary>
         /// <returns>multiplayer game text</returns>
-        [HttpGet]
+        [HttpGet("create/multiplayer")]
         public async Task<IActionResult> CreateMultilpayerGame()
         {
-            try
+            var text = await _gameService.CreateMultiplayerGameAsync();
+            if (text == null)
             {
-                var text = await _gameService.CreateMultiplayerGameAsync();
-                if (text == null)
-                {
-                    return BadRequest("Failed to create multiplayer game.");
-                }
-                return Ok(text);
+                _logger.LogError("Failed to create multiplayer game, service returned null in {Method}", nameof(CreateMultilpayerGame));
+                return BadRequest("Failed to create multiplayer game.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error creating game: {ex.Message}");
-            }
+            return Ok(text);
         }
 
-        [HttpPost]
+        [HttpPost("save/singleplayer")]
         public async Task<IActionResult> SaveSinglePlayer(TestResultDTO dto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Required attributes missing, unable to save.");
-                }
-                int res = await _gameService.SaveSinglePlayer(dto);
-                if (res > 0)
-                {
-                    return Ok();
-                } 
-                else
-                {
-                    return BadRequest("Unable to save game");
-                }
+                _logger.LogError("Invalid test result data received: {@TestResultDTO} in {Method}", dto, nameof(SaveSinglePlayer));
+                return BadRequest("Required attributes missing, unable to save.");
             }
-            catch(Exception ex)
+            
+            string message = await _gameService.SaveSinglePlayer(dto) ?? "";
+            
+            if (message == "Test result saved successfully.")
             {
-                return StatusCode(500, ex.Message);
+                return Ok();
+            } 
+            else
+            {
+                _logger.LogError("Failed to save game result, service returned message: {Message} in {Method}", message, nameof(SaveSinglePlayer));
+                return BadRequest("Unable to save game");
             }
         }
 

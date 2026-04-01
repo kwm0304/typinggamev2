@@ -8,7 +8,9 @@ using server.Services;
 using server.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+
 Log.Logger = LoggingServicesExtension.ConfigureSerilog(new LoggerConfiguration(), builder.Configuration);
+builder.Host.UseSerilog(Log.Logger);
 
 builder.Services.AddControllers();
 builder.Services.AddCors();
@@ -25,7 +27,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddAppServices();
 builder.Services.AddIdentityServices(builder.Configuration);
-
+builder.Services.AddHttpServices();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

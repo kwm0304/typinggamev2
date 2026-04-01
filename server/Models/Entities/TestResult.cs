@@ -6,6 +6,7 @@
         public required string UserId { get; set; }
         public AppUser User { get; set; } = null!;
         public required decimal RawWPM { get; set; }
+        public required decimal WPM { get; set; }
         public required decimal Accuracy { get; set; }
         public required decimal TimeTaken { get; set; }
         public required TestCharacters TestCharacters { get; set; } 

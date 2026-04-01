@@ -6,6 +6,6 @@ namespace server.Services.Interfaces
     {
         Task<GameTextDTO> CreateGameAsync(GameConfigurationDTO config);
         Task<GameTextDTO> CreateMultiplayerGameAsync();
-        Task<int> SaveSinglePlayer(TestResultDTO dto);
+        Task<string?> SaveSinglePlayer(TestResultDTO dto);
     }
 }

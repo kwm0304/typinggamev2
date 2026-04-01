@@ -15,7 +15,7 @@ namespace server.Services
             _config = config;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]!));
         }
-        public string CreateToken(AppUser user)
+        public string CreateToken(AppUser user, bool remember = false)
         {
             var claims = new List<Claim>
             {
@@ -27,7 +27,7 @@ namespace server.Services
             var descriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
+                Expires = remember == false ? DateTime.Now.AddDays(7) : DateTime.Now.AddDays(30),
                 SigningCredentials = credentials,
                 Issuer = _config["JWT:Issuer"],
                 Audience = _config["JWT:Audience"]

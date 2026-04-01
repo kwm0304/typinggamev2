@@ -18,10 +18,10 @@ namespace server.Data
                 entity.HasKey(tr => tr.Id);
 
                 entity.HasOne(tr => tr.User)
-      .WithMany(u => u.Results)
-      .HasForeignKey(tr => tr.UserId)
-      .OnDelete(DeleteBehavior.Restrict)
-      .IsRequired();
+                  .WithMany(u => u.Results)
+                  .HasForeignKey(tr => tr.UserId)
+                  .OnDelete(DeleteBehavior.Restrict)
+                  .IsRequired();
 
                 // Configure owned value object for TestCharacters
                 entity.OwnsOne(tr => tr.TestCharacters, owned =>

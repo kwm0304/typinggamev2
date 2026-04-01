@@ -12,6 +12,9 @@ namespace server.Models.DTOs
         [Required(ErrorMessage = "Raw WPM is required")]
         [Range(0, double.MaxValue, ErrorMessage = "Raw WPM must be a non-negative number")]
         public required decimal RawWPM { get; set; }
+        [Required(ErrorMessage = "WPM is required")]
+        [Range(0, double.MaxValue, ErrorMessage = "WPM must be a non-negative number")]
+        public required decimal WPM { get; set; }
         [Required(ErrorMessage = "Accuracy is required")]
         [Range(0, double.MaxValue, ErrorMessage = "Accuracy must be between 0 and 100")]
         public required decimal Accuracy { get; set; }
