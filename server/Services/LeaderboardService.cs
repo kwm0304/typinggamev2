@@ -34,7 +34,7 @@ namespace server.Services
                 .OrderByDescending(e => e.WPM)
                 .ThenByDescending(e => e.Accuracy)
                 .ThenByDescending(e => e.RawWPM)
-                .Take(10)
+                .Take(25)
                 .Cast<LeaderboardEntryDTO?>()
                 .ToList();
 

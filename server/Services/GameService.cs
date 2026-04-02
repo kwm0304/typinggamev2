@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using server.Data;
 using server.Http;
 using server.Models.DTOs;
@@ -53,6 +54,59 @@ namespace server.Services
             return new GameTextDTO { Text = formattedText };
         }
 
+        public async Task<string> SaveMultiplayer(MultiplayerTestResultDTO dto)
+        {
+            var winner = await _context.Users.FindAsync(dto.WinningTestResult.UserId);
+            var loser = await _context.Users.FindAsync(dto.LosingTestResult.UserId);
+            if (winner == null)
+            {
+                _logger.LogError("No user found with UserId: {UserId} in {Method}", dto.WinningTestResult.UserId, nameof(SaveMultiplayer));
+                throw new ArgumentException("No user associated with the provided UserId.");
+            }
+            if (loser == null)
+            {
+                _logger.LogError("No user found with UserId: {UserId} in {Method}", dto.LosingTestResult.UserId, nameof(SaveMultiplayer));
+                throw new ArgumentException("No user associated with the provided UserId.");
+            }
+            var winningResult = ConvertToTestResultFromDTO(dto.WinningTestResult, winner);
+            var losingResult = ConvertToTestResultFromDTO(dto.LosingTestResult, loser);
+
+            await _context.TestResults.AddAsync(winningResult);
+            await _context.TestResults.AddAsync(losingResult);
+
+            // Persist TestResults so their Ids are generated
+            await _context.SaveChangesAsync();
+
+            var multiplayerRes = new MultiplayerTestResult
+            {
+                WinningTestResultId = winningResult.Id,
+                LosingTestResultId = losingResult.Id,
+                WinningTestResult = winningResult,
+                LosingTestResult = losingResult,
+                PlayedAt = DateTime.UtcNow
+            };
+
+            await _context.MultiplayerTestResults.AddAsync(multiplayerRes);
+            await _context.SaveChangesAsync();
+            return "Test result saved successfully.";
+
+        }
+        private TestResult ConvertToTestResultFromDTO(TestResultDTO dto,AppUser user)
+        {
+            return new TestResult
+            {
+                UserId = user.Id,
+                User = user,
+                WPM = dto.WPM,
+                RawWPM = dto.RawWPM,
+                Accuracy = dto.Accuracy,
+                TimeTaken = dto.TimeTaken,
+                TestCharacters = dto.TestCharacters,
+                TestType = dto.TestType,
+                TestModifier = dto.TestModifier,
+                PlayedAt = DateTime.UtcNow
+            };
+        }
         public async Task<string?> SaveSinglePlayer(TestResultDTO dto)
         {
             try
@@ -62,20 +116,8 @@ namespace server.Services
                 {
                     _logger.LogError("No user found with UserId: {UserId} in {Method}", dto.UserId, nameof(SaveSinglePlayer));
                     throw new ArgumentException("No user associated with the provided UserId.");
-                } 
-                var testResult = new TestResult
-                {
-                    UserId = dto.UserId,
-                    User = user,
-                    WPM = dto.WPM,
-                    RawWPM = dto.RawWPM,
-                    Accuracy = dto.Accuracy,
-                    TimeTaken = dto.TimeTaken,
-                    TestCharacters = dto.TestCharacters,
-                    TestType = dto.TestType,
-                    TestModifier = dto.TestModifier,
-                    PlayedAt = DateTime.UtcNow
-                };
+                }
+                var testResult = ConvertToTestResultFromDTO(dto, user);
                 await _context.TestResults.AddAsync(testResult);
                 await _context.SaveChangesAsync();
                 return "Test result saved successfully.";

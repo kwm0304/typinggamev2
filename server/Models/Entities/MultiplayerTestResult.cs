@@ -1,6 +1,6 @@
 ﻿namespace server.Models.Entities
 {
-    public class MutltiplayerTestResult
+    public class MultiplayerTestResult
     {
         public int Id { get; set; }
         public required int WinningTestResultId { get; set; }

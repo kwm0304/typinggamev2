@@ -9,7 +9,7 @@ namespace server.Controllers
         private readonly ILeaderboardService _service = service;
         private readonly ILogger<LeaderboardController> _logger = logger;
 
-        [HttpGet("/{timePeriod}")]
+        [HttpGet("{timePeriod}")]
         public async Task<IActionResult> GetLeaderboardForTimePeriod(int timePeriod)
         {
             var timePeriosdEnum = (LeaderboardTimePeriod)timePeriod;
@@ -23,7 +23,7 @@ namespace server.Controllers
         }
 
        
-        [HttpGet("/users/{userId}")]
+        [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetUserLeaderboard(string userId)
         {
             var leaderboard = await _service.GetUserLeaderboard(userId);

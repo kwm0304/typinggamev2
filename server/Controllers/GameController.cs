@@ -63,6 +63,25 @@ namespace server.Controllers
                 return BadRequest("Unable to save game");
             }
         }
+        [HttpPost("save/multiplayer")]
+        public async Task<IActionResult> SaveMultiplayer([FromBody] MultiplayerTestResultDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid object received: {@TestResult} in method: {MethodName}", dto, nameof(SaveMultiplayer));
+                return BadRequest("Invalid test results");
+            }
+            string message = await _gameService.SaveMultiplayer(dto);
+            if (message == "Test result saved successfully.")
+            {
+                return Ok();
+            }
+            else
+            {
+                _logger.LogError("Failed to save game result, service returned message: {Message} in {Method}", message, nameof(SaveSinglePlayer));
+                return BadRequest("Unable to save game");
+            }
+        }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using server.Models.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
+using server.Models.DTOs;
 
 namespace server.Services.Interfaces
 {
@@ -7,5 +8,6 @@ namespace server.Services.Interfaces
         Task<GameTextDTO> CreateGameAsync(GameConfigurationDTO config);
         Task<GameTextDTO> CreateMultiplayerGameAsync();
         Task<string?> SaveSinglePlayer(TestResultDTO dto);
+        Task<string> SaveMultiplayer(MultiplayerTestResultDTO dto);
     }
 }

@@ -9,6 +9,7 @@ namespace server.Data
         {
         }
         public DbSet<TestResult> TestResults { get; set; }
+        public DbSet<MultiplayerTestResult> MultiplayerTestResults { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -39,9 +40,13 @@ namespace server.Data
                 entity.Property(tr => tr.TestModifier)
                     .HasMaxLength(50)
                     .HasColumnType("nvarchar(50)");
+                entity.Property(pa => pa.PlayedAt)
+                .HasMaxLength(50)
+                .HasColumnType("nvarchar(50)");
+                
             });
 
-            builder.Entity<MutltiplayerTestResult>(entity =>
+            builder.Entity<MultiplayerTestResult>(entity =>
             {
                 entity.HasKey(mtr => mtr.Id);
                 entity.HasOne(mtr => mtr.WinningTestResult)
