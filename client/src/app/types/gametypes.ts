@@ -81,11 +81,11 @@ export interface PlayerResults {
 }
 
 export interface LeaderboardEntry {
-Rank: number;
-Username: string;
-WPM: number;
-Accuracy: string;
-RawWPM: number;
-PlayedAt: string;
+rank: number;
+username: string;
+wpm: number;
+accuracy: number;
+rawWPM: number;
+playedAt: string;
 
 }

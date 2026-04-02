@@ -368,7 +368,9 @@ export class Multiplayer implements OnInit, OnDestroy {
     this.stopTimer();
 
     const p1Stats = this.getPlayerStats('p1');
-    const p2Stats = this.getPlayerStats('p2');  
+    const p2Stats = this.getPlayerStats('p2');
+
+    this.saveMultiplayerGame(p1Stats, p2Stats);
 
     const playerResults: PlayerResults[] = [
       {
@@ -388,6 +390,7 @@ export class Multiplayer implements OnInit, OnDestroy {
   }
 
   private getPlayerStats(player: 'p1' | 'p2'): TestResults {
+    const currentPlayer = player === 'p1' ? this.playerOne() : this.playerTwo();
     const charStates = player === 'p1' ? this.playerOneCharStates : this.playerTwoCharStates;
     const extraCount = player === 'p1' ? this.playerOneExtra : this.playerTwoExtra;
 
@@ -396,9 +399,11 @@ export class Multiplayer implements OnInit, OnDestroy {
       this.gameSettings.middleKey === 'time'
         ? this.gameService.convertTime(this.gameSettings.rightModifier)
         : this.elapsedSeconds;
+    const totalTyped = stats.correct + stats.incorrect;
+    const accuracy = totalTyped > 0 ? ((stats.correct / totalTyped) * 100).toFixed(2) : '0.00';
 
     return {
-      userName: this.userService.user()?.username,
+      userName: currentPlayer?.username ?? 'Unknown Player',
       rawWPM: this.gameService.getRawWPM(totalSeconds, stats.correct),
       wpm: this.gameService.getWPM(totalSeconds, stats),
       timeTaken: totalSeconds,
@@ -409,7 +414,41 @@ export class Multiplayer implements OnInit, OnDestroy {
       TestCharacters: stats as TestCharacters,
       hasPunctuation: this.gameSettings.hasPunctuation,
       hasNumbers: this.gameSettings.hasNumbers,
+      accuracy,
     };
+  }
+
+  private saveMultiplayerGame(playerOneStats: TestResults, playerTwoStats: TestResults): void {
+    const playerOneUserId = this.playerOne()?.userId;
+    const playerTwoUserId = this.playerTwo()?.userId;
+
+    if (!playerOneUserId || !playerTwoUserId) {
+      return;
+    }
+
+    const playerOneResultDTO = this.gameService.convertToTestResultDTO(playerOneStats, playerOneUserId);
+    const playerTwoResultDTO = this.gameService.convertToTestResultDTO(playerTwoStats, playerTwoUserId);
+    const playerOneTotal = playerOneResultDTO.RawWPM * playerOneResultDTO.Accuracy;
+    const playerTwoTotal = playerTwoResultDTO.RawWPM * playerTwoResultDTO.Accuracy;
+
+    const finalData = playerOneTotal >= playerTwoTotal
+      ? {
+          WinningTestResult: playerOneResultDTO,
+          LosingTestResult: playerTwoResultDTO,
+        }
+      : {
+          WinningTestResult: playerTwoResultDTO,
+          LosingTestResult: playerOneResultDTO,
+        };
+
+    this.gameService.saveMultiplayerResult(finalData).subscribe({
+      next: () => {
+        this.alertService.show('Multiplayer result saved.', 'success');
+      },
+      error: (error) => {
+        this.alertService.show('Error saving multiplayer result: ' + error.message, 'error');
+      },
+    });
   }
 
   onCountdownClosed(): void {

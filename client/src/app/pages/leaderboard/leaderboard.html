@@ -1,17 +1,50 @@
-<div class="h-full w-full flex justify-center items-center">
-    <ul>
+<div class="h-[75vh] w-full flex flex-col">
+    <h1 class="text-center text-3xl text-[var(--caret-color)] pb-12">Leaderboard</h1>
+    <div class="grid grid-cols-3 items-start justify-center text-lg px-8">
+    <div class="flex flex-col px-4 justify-center items-center rounded-md py-4 gap-y-4 col-span-1">
+        <ul class="bg-[var(--sub-alt-color)] w-40 rounded-md text-center">
+            @for (time of timeFilters; track $index)
+            {
+                <li 
+                class="list-row hover:bg-[var(--caret-color)] hover:text-[var(--sub-alt-color)] px-4 py-2 rounded-md hover:cursor-pointer"
+                [ngClass]="{'bg-[var(--caret-color)]': selectedTimeFilter === time.label}"
+                (click)="selectTimeFrame(time.label)">
+                    {{time.label}}
+                </li>
+            }
+            <li 
+            class="list-row hover:bg-[var(--caret-color)] hover:text-[var(--sub-alt-color)] px-4 py-2 rounded-md hover:cursor-pointer">
+                All Time
+            </li>
+            
+        </ul>
+        
+
+    </div>
+    <ul class="col-span-2">
+        <li class="list-row font-bold py-2 px-4">
+            <div class="flex gap-4 items-center">
+                <span class="text-[var(--text-color)] w-12 text-center">Rank</span>
+                <span class="text-[var(--text-color)] w-48">Username</span>
+                <span class="text-[var(--text-color)] w-24 text-center">WPM</span>
+                <span class="text-[var(--text-color)] w-24 text-center">Accuracy</span>
+                <span class="text-[var(--text-color)] w-24 text-center">Raw WPM</span>
+                <span class="text-[var(--text-color)] w-60 text-center">Played At</span>
+            </div>
+        </li>
         @for (item of leaderboardData; track $index)
         {
-        <li class="list-row" [ngClass]="$index % 2 === 0 ? 'bg-[var(--sub-alt-color)]' : 'bg-[var(--bg-color)]'">
+        <li class="list-row py-2 px-4 rounded-md" [ngClass]="$index % 2 === 0 ? 'bg-[var(--sub-alt-color)]' : 'bg-[var(--bg-color)]'">
             <div class="flex gap-4 items-center">
-                <span class="text-[var(--sub-color)] w-12 text-right">{{item.Rank}}.</span>
-                <span class="text-[var(--text-color)] w-48">{{item.Username}}</span>
-                <span class="text-[var(--caret-color)] w-24 text-right">{{item.WPM}} WPM</span>
-                <span class="text-[var(--sub-alt-color)] w-24 text-right">{{item.Accuracy}}</span>
-                <span class="text-[var(--sub-color)] w-24 text-right">{{item.RawWPM}} Raw WPM</span>
-                <span class="text-[var(--sub-alt-color)] w-48 text-right">{{item.PlayedAt | date:'short'}}</span>
+                <span class="text-[var(--text-color)] w-12 text-center">{{item.rank + 1}}.</span>
+                <span class="text-[var(--text-color)] w-48">{{item.username}}</span>
+                <span class="text-[var(--text-color)] w-24 text-center">{{item.wpm}} </span>
+                <span class="text-[var(--text-color)] w-24 text-center">{{item.accuracy}}</span>
+                <span class="text-[var(--text-color)] w-24 text-center">{{item.rawWPM}}</span>
+                <span class="text-[var(--text-color)] w-60 text-center">{{item.playedAt | date:'short'}}</span>
             </div>
         </li>
         }
     </ul>
+    </div>
 </div>

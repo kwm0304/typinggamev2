@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CharState, GameSettings, TestCharacters } from '../types/gametypes';
+import { CharState, GameSettings, TestCharacters, TestResults } from '../types/gametypes';
 import { Observable } from 'rxjs';
 
 interface GameTextResponse {
@@ -31,7 +31,27 @@ export class GameService {
   public saveSinglePlayerResult(resultData: any): Observable<object> {
     return this.http.post(`${this.baseUrl}/save/singleplayer`, resultData);
   }
+  public saveMultiplayerResult(resultData: any): Observable<object> {
+    return this.http.post(`${this.baseUrl}/save/multiplayer`, resultData);
+  }
 /*-----------API Helper------------- */
+  public convertToTestResultDTO(testResults: TestResults, userId: string) {
+    return {
+      UserId: userId,
+      WPM: parseFloat(testResults.wpm.toString()),
+      RawWPM: testResults.rawWPM,
+      Accuracy: parseFloat(testResults.accuracy?.toString() ?? '0'),
+      TimeTaken: testResults.timeTaken,
+      TestType: testResults.TestType.test,
+      TestModifier: testResults.TestType.modifier,
+      TestCharacters: {
+        Correct: testResults.TestCharacters.correct,
+        Incorrect: testResults.TestCharacters.incorrect,
+        Extra: testResults.TestCharacters.extra,
+        Missed: testResults.TestCharacters.missed,
+      },
+    };
+  }
   public formatDtoForServer(gameSettings: GameSettings): any {
     return {
       HasPunctuation: gameSettings.hasPunctuation,
@@ -119,6 +139,6 @@ export class GameService {
   public getWPM(seconds: number, stats: TestCharacters): number {
     const grossWPM = this.getRawWPM(seconds, stats.correct);
     const accuracy = stats.correct + stats.incorrect > 0 ? stats.correct / (stats.correct + stats.incorrect) : 0;
-    return Math.round(grossWPM * accuracy);
+    return Math.round(grossWPM * accuracy).toFixed(2) as unknown as number;
   }
 }

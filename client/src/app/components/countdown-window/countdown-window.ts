@@ -11,13 +11,15 @@ export class CountdownWindow {
   closeInstructions = output<boolean>();
 
   startCountdown() {
+    const startTime = Date.now();
     const countdownInterval = setInterval(() => {
-      this.secondsRemaining--;
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      this.secondsRemaining = 5 - elapsed;
       if (this.secondsRemaining <= 0) {
         clearInterval(countdownInterval);
         this.closeInstructionWindow();
       }
-    }, 1000);
+    }, 100);
   }
 
   closeInstructionWindow() {

@@ -261,22 +261,7 @@ export class Singleplayer implements OnInit, OnDestroy {
         username: this.user.username,
         testResults: this.getFinalStats(),
       };
-      const testCharacters = {
-        Correct: playerResults.testResults.TestCharacters.correct,
-        Incorrect: playerResults.testResults.TestCharacters.incorrect,
-        Extra: playerResults.testResults.TestCharacters.extra,
-        Missed: playerResults.testResults.TestCharacters.missed,
-      }
-      const testResultDTO = {
-        UserId: this.user.userId,
-        WPM: parseFloat(playerResults.testResults.wpm.toString()),
-        RawWPM: playerResults.testResults.rawWPM,
-        Accuracy: parseFloat(playerResults.testResults.accuracy?.toString() ?? '0'),
-        TimeTaken: playerResults.testResults.timeTaken,
-        TestType: playerResults.testResults.TestType.test,
-        TestModifier: playerResults.testResults.TestType.modifier,
-        TestCharacters: testCharacters,
-      }
+      const testResultDTO = this.gameService.convertToTestResultDTO(playerResults.testResults, this.user.userId);
       this.gameService.saveSinglePlayerResult(testResultDTO).subscribe((data) => {
         this.alertService.show('Your result has been saved!', 'success');
       }, (error) => {
@@ -294,19 +279,10 @@ export class Singleplayer implements OnInit, OnDestroy {
       this.gameSettings.middleKey === 'time'
         ? this.gameService.convertTime(this.gameSettings.rightModifier)
         : this.elapsedSeconds;
-/*userName: string;
-  rawWPM: number;
-  wpm: number;
-  timeTaken: number;
-  TestType: TestType;
-  TestCharacters: TestCharacters;
-  hasPunctuation?: boolean;
-  hasNumbers?: boolean;
-  accuracy?: string; */
-  const totalTyped = stats.correct + stats.incorrect;
+
+    const totalTyped = stats.correct + stats.incorrect;
     const accuracy = totalTyped > 0 ? ((stats.correct / totalTyped) * 100).toFixed(2) : '0.00';
     return {
-
       userName: this.user.username,
       rawWPM: this.gameService.getRawWPM(totalSeconds, stats.correct),
       wpm: this.gameService.getWPM(totalSeconds, stats),
@@ -321,6 +297,8 @@ export class Singleplayer implements OnInit, OnDestroy {
       accuracy: accuracy,
     };
   }
+
+  
 
   public toggleShowModal() {
     this.showLanguageModal = true;
